@@ -1,1 +1,1 @@
-print(value)
+ newindex=xml.find('<'+'/'+node.key+'>')

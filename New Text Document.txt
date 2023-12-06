@@ -1,0 +1,234 @@
+<users>
+    <user>
+        <id>1</id>
+        <name>AhmedAli</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>economy</topic>
+                    <topic>finance</topic>
+                </topics>
+            </post>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>solar_energy</topic>
+                </topics>
+            </post>
+            <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+            <topics>
+                <topic>solar_energy</topic>
+            </topics>
+            <topic>solar_energy</topic>
+        </posts>
+        <followers>
+            <follower>
+                <id>2</id>
+            </follower>
+            <follower>
+                <id>3</id>
+            </follower>
+            <id>3</id>
+        </followers>
+    </user>
+    <user>
+        <id>2</id>
+        <name>YasserAhmed</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>education</topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>1</id>
+            </follower>
+        </followers>
+    </user>
+    <id>2</id>
+    <name>YasserAhmed</name>
+    <posts>
+        <post>
+            <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+            <topics>
+                <topic>education</topic>
+            </topics>
+        </post>
+    </posts>
+    <post>
+        <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+        <topics>
+            <topic>education</topic>
+        </topics>
+    </post>
+    <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+    <topics>
+        <topic>education</topic>
+    </topics>
+    <topic>education</topic>
+    <followers>
+        <follower>
+            <id>1</id>
+        </follower>
+    </followers>
+    <follower>
+        <id>1</id>
+    </follower>
+    <id>1</id>
+    <user>
+        <id>3</id>
+        <name>MohamedSherif</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>sports</topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>1</id>
+            </follower>
+        </followers>
+    </user>
+    <id>3</id>
+    <name>MohamedSherif</name>
+    <posts>
+        <post>
+            <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+            <topics>
+                <topic>sports</topic>
+            </topics>
+        </post>
+    </posts>
+    <post>
+        <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+        <topics>
+            <topic>sports</topic>
+        </topics>
+    </post>
+    <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+    <topics>
+        <topic>sports</topic>
+    </topics>
+    <topic>sports</topic>
+    <followers>
+        <follower>
+            <id>1</id>
+        </follower>
+    </followers>
+    <follower>
+        <id>1</id>
+    </follower>
+    <id>1</id>
+</users>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<users>
+    <user>
+        <id>1</id>
+        <name>AhmedAli</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>economy</topic>
+                    <topic>finance</topic>
+                </topics>
+            </post>
+        </posts>
+    </user>
+</users>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<users>
+    <user>
+        <id>1</id>
+        <name>AhmedAli</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>economy</topic>
+                    <topic>finance</topic>
+                </topics>
+            </post>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>solar_energy</topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>2</id>
+            </follower>
+            <follower>
+                <id>3</id>
+            </follower>
+        </followers>
+    </user>
+    <user>
+        <id>2</id>
+        <name>YasserAhmed</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>education</topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>1</id>
+            </follower>
+        </followers>
+    </user>
+    <user>
+        <id>3</id>
+        <name>MohamedSherif</name>
+        <posts>
+            <post>
+                <body>Loremipsumdolorsitamet,consecteturadipiscingelit,seddoeiusmodtemporincididuntutlaboreetdoloremagnaaliqua.Utenimadminimveniam,quisnostrudexercitationullamcolaborisnisiutaliquipexeacommodoconsequat.</body>
+                <topics>
+                    <topic>sports</topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>1</id>
+            </follower>
+        </followers>
+    </user>
+</users>
