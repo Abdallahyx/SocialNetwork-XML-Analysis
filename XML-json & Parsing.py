@@ -118,6 +118,3 @@ def ParseintoTree(filepath):
     tree=Tree()
     tree.set_root(TreeParsing(xml))
     return tree
-
-
-print(ParseintoTree('New Text Document.xml').format())
