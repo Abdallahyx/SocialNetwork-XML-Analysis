@@ -4,7 +4,7 @@ from Tree import Node
 
 def remove_spaces_and_enters(input_string):
     # Remove spaces
-    input_string = input_string.replace(" ", "")
+    input_string = input_string.replace("    ", "")
     
     # Remove newline characters
     input_string = input_string.replace("\n", "").replace("\r", "")
@@ -100,8 +100,7 @@ def TreeParsing(xml,Nod=None,start=0):
    
     return (tree.m_root)
 
-with open('New Text Document.xml','r') as file:
-    xml = file.read()
+
 def ParseintoTree(filepath):
     with open(filepath,'r') as file:
         xml = file.read()
@@ -109,6 +108,6 @@ def ParseintoTree(filepath):
     tree=Tree()
     tree.set_root(TreeParsing(xml))
     return tree
-tree=ParseintoTree('sample.xml')
+tree=ParseintoTree('New Text Document.xml')
+print(tree.m_root.value)
 print(tree.format())
-
