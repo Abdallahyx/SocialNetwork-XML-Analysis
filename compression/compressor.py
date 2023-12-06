@@ -1,6 +1,5 @@
 
 import random
-import string
 
 """TODO: Move it to a file maybe and add more than just uppercase characters to differ between data in the file
     but in the meanwhile this works
@@ -13,16 +12,17 @@ import string
 lookup_table = {}
 
 
-def get_replacement():
+# Original data is a member in the class structure later
+def get_replacement(original_data: bytes) -> bytes:
     """ Get a replacement byte and make sure it is not in the lookup table"""
     
-    if (len(lookup_table.items()) == 26):
+    if (len(lookup_table.items()) == 255):
         raise Exception("Maximum characters reached in lookup table")
 
-    replacement = random.choice(string.ascii_uppercase)
+    replacement = random.randbytes(1)
 
-    if (replacement in lookup_table.keys()):
-        replacement = get_replacement()
+    if (replacement in lookup_table.keys() or replacement in original_data):
+        replacement = get_replacement(original_data)
 
     return replacement
 
@@ -38,12 +38,12 @@ def max_pair(data: dict):
     return max_pair, max_freq
 
 
-def compress_text(filename: str):
-    """Open the file data as text and try to compress it"""
+def compress_binary(filename: str):
+    """Open the file data as binary and try to compress it"""
 
     # Open the file in text format
-    with open(file=filename, mode="r") as file_binary:
-        file_data = file_binary.read()
+    with open(file=filename, mode="rb") as file_text:
+        file_data = file_text.read()
         data_len = len(file_data)
 
     # Placeholder for the highest occuring object in the last loop
@@ -59,34 +59,41 @@ def compress_text(filename: str):
             first_iter = compressed_data[i]
             second_iter = compressed_data[i + 1]
 
-            pair = first_iter + second_iter
+            pair = first_iter.to_bytes() + second_iter.to_bytes()
 
             if (pair in pairs):
                 pairs[pair] += 1
 
             else:
                 pairs[pair] = 1
-
-        highest_occuring_pair, last_pair_frequency = max_pair(pairs)
         
         try:
-            replacement = get_replacement()
+            replacement = get_replacement(file_data)
+            c = input()
         except Exception as e:
             print(e)
             break
 
+        highest_occuring_pair, last_pair_frequency = max_pair(pairs)
+
         # Add the random byte to the lookup table
         lookup_table[replacement] = highest_occuring_pair
+        print(lookup_table)
 
-        # Replace two characters with a sigle byte
+
+        # Replace two bytes with a single byte
         compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
+
         data_len = len(compressed_data)
 
     print(compressed_data)
     print(lookup_table)
 
 
-    with open(file=filename.replace(".xml", ".xip"), mode="w") as compressed_file:
+    with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
         compressed_file.write(compressed_data)
 
-compress_text("./sample.xml")
+def decompress_binary():
+    pass
+
+compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
