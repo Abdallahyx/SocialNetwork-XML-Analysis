@@ -1,0 +1,68 @@
+<users>
+	<user>
+		<id>1</id>
+        <posts>
+            <post>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+				Accusamus ad cum maiores saepe similique! Accusantium aliquam consequuntur enim
+				exercitationem facilis harum maxime placeat provident quaerat.
+				Asperiores consequatur delectus itaque optio?
+			</post>
+        </posts>
+		...
+			<followers>
+				<follower>
+					<id>2</id>
+				</follower>
+				<follower>
+					<id>4</id>
+				</follower>
+			</followers>
+	</user>
+	<user>
+		<id>2</id>
+		<posts>
+            <post>
+				Data Structures and Algorithms is one of the courses you must study in Computer Engineering
+			</post>
+        </posts>
+		...
+		<followers>
+			<follower>
+				<id>3</id>
+			</follower>
+			<follower>
+				<id>4</id>
+			</follower>
+		</followers>
+	</user>
+	<user>
+		<id>3</id>
+		<posts>
+            <post>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+				Accusamus ad cum maiores saepe similique! Accusantium aliquam consequuntur enim
+				exercitationem facilis harum maxime placeat provident quaerat.
+				Asperiores consequatur delectus itaque optio?
+			</post>
+        </posts>
+		...
+			<followers>
+				<follower>
+					<id>2</id>
+				</follower>
+			</followers>
+	</user>
+	<user>
+		<id>4</id>
+		...
+			<followers>
+				<follower>
+					<id>1</id>
+				</follower>
+				<follower>
+					<id>3</id>
+				</follower>
+			</followers>
+	</user>
+</users>
