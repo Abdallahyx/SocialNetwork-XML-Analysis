@@ -14,6 +14,7 @@ class Node:
 class Tree:
     def __init__(self):
         self.m_root = None
+    
 
     def set_root(self, t):
         self.m_root = t
