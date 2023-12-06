@@ -59,9 +59,6 @@ def TreeParsing(xml,Nod=None,start=0):
             open_tag=True
             if(xml[i+1]=='/'):
                 insidechild=False
-                #current_node.set_key(''.join(value))
-                
-                #value=[]
             if(insidechild==True):
                 substring_start = xml[i:].find('<'+'/'+current_node.key+'>')
                 if substring_start != -1:
@@ -71,7 +68,6 @@ def TreeParsing(xml,Nod=None,start=0):
               
                 continue
                
-
         
         if char=='>':
             open_tag=False
@@ -93,13 +89,9 @@ def TreeParsing(xml,Nod=None,start=0):
             continue
 
 
-       # else:
-           # if(char!='<'):
-                #value.append(char)
                 
         if( char=='<' and xml[i+1]=='/' ):
-           #current_node.set_value(''.join(value)) 
-            #value=[]
+
          parentnodevalue.append(char)
         if(char=='<' and xml[i+1]=='/'):
             current_node.set_value(''.join(parentnodevalue)) 
@@ -117,3 +109,6 @@ def ParseintoTree(filepath):
     tree=Tree()
     tree.set_root(TreeParsing(xml))
     return tree
+tree=ParseintoTree('sample.xml')
+print(tree.format())
+
