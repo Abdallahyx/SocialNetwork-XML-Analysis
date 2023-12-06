@@ -26,7 +26,6 @@ def TreeParsing(xml,Nod=None,start=0):
     closed_tag=False
     childnumber=0
     newindex=0
-    yarab=0
     parentindexend=None
     if(Nod!=None):
         parentindexend=xml[newindex:].find('<'+'/'+tree.m_root.key+'>')
