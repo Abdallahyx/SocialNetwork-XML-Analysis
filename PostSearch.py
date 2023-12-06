@@ -1,4 +1,3 @@
-from GraphVisualization import create_graph
 def post_search(graph, keyword):
     matching_posts = []
 
