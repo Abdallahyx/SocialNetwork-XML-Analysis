@@ -27,9 +27,9 @@ def mutual_followers(graph, node1, node2):
     followers_node1 = set(graph.successors(node1))
     followers_node2 = set(graph.successors(node2))
 
-    mutual_followers = followers_node1.intersection(followers_node2)
-    print(f"Mutual followers between nodes {node1} and {node2}: {mutual_followers}")
-    return list(mutual_followers)
+    mut_followers = followers_node1.intersection(followers_node2)
+    print(f"Mutual followers between nodes {node1} and {node2}: {mut_followers}")
+    return list(mut_followers)
 
 
 # 4.  Suggest users to follow
