@@ -1,8 +1,7 @@
 
 import random
 
-"""TODO: Move it to a file maybe and add more than just uppercase characters to differ between data in the file
-    but in the meanwhile this works
+"""TODO: Move lookup table to a file maybe or add it to the file as overhead
 
     TODO: Class structure
 
@@ -15,9 +14,11 @@ lookup_table = {}
 # Original data is a member in the class structure later
 def get_replacement(original_data: bytes) -> bytes:
     """ Get a replacement byte and make sure it is not in the lookup table"""
+
+    unique_byte_count = len(set(original_data))
     
-    if (len(lookup_table.items()) == 255):
-        raise Exception("Maximum characters reached in lookup table")
+    if (len(lookup_table.items()) == (256 - unique_byte_count)):
+        raise Exception("Maximum characters reached in lookup table, maximum compression reached")
 
     replacement = random.randbytes(1)
 
@@ -41,9 +42,9 @@ def max_pair(data: dict):
 def compress_binary(filename: str):
     """Open the file data as binary and try to compress it"""
 
-    # Open the file in text format
-    with open(file=filename, mode="rb") as file_text:
-        file_data = file_text.read()
+    # Open the file in binary format
+    with open(file=filename, mode="rb") as file_binary:
+        file_data = file_binary.read()
         data_len = len(file_data)
 
     # Placeholder for the highest occuring object in the last loop
@@ -69,7 +70,6 @@ def compress_binary(filename: str):
         
         try:
             replacement = get_replacement(file_data)
-            c = input()
         except Exception as e:
             print(e)
             break
@@ -78,22 +78,47 @@ def compress_binary(filename: str):
 
         # Add the random byte to the lookup table
         lookup_table[replacement] = highest_occuring_pair
-        print(lookup_table)
-
 
         # Replace two bytes with a single byte
         compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
-
         data_len = len(compressed_data)
-
-    print(compressed_data)
-    print(lookup_table)
-
 
     with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
         compressed_file.write(compressed_data)
 
-def decompress_binary():
-    pass
+def get_original(b: bytes):
+    """Check if the byte is in the lookup table and get the original byte before decompression"""
 
-compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
+    if (b in lookup_table.keys()):
+        b1: bytes = get_original(lookup_table[b][0].to_bytes())
+        b2: bytes = get_original(lookup_table[b][1].to_bytes())
+
+        return b1 + b2
+
+    return b
+    
+
+def decompress_binary(filename: str):
+    """ Decompress the file back tp its original format """
+    
+    with open(file=filename, mode="rb") as file_binary:
+        file_data = file_binary.read()
+
+    decompressed_data = b""
+
+    # Iterate through every file in the compressed file and find every byte in the lookup table recursively
+    for i in range(len(file_data)):
+        decompressed_data += get_original(file_data[i].to_bytes())
+
+
+    with open(file=filename.replace(".xip", "_decompressed.xml"), mode="wb") as decompressed_file:
+        decompressed_file.write(decompressed_data)
+
+
+
+if (__name__ == "__main__"):
+    print("Compressing...")
+    compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
+
+    print("Decompressing...")
+    decompress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xip")
