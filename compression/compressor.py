@@ -27,6 +27,17 @@ def get_replacement(original_data: bytes) -> bytes:
 
     return replacement
 
+def get_original(b: bytes, table: dict):
+    """Check if the byte is in the lookup table and get the original byte before decompression"""
+
+    if (b in table.keys()):
+        b1: bytes = get_original(table[b][0].to_bytes(), table)
+        b2: bytes = get_original(table[b][1].to_bytes(), table)
+
+        return b1 + b2
+
+    return b
+
 def max_pair(data: dict):
     max_freq: int = 0
 
@@ -37,6 +48,20 @@ def max_pair(data: dict):
 
 
     return max_pair, max_freq
+
+def reconstruct_dict(data: bytes):
+    """Used to reconstruct the lookup table from the data found in the compressed file"""
+
+    byte_len = data[0]
+    table_chunk = data[(-3 * byte_len):]
+
+    table = {}
+
+    for i in range(0, 3 * byte_len, 3):
+        table[table_chunk[i].to_bytes()] = table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
+
+    return table
+
 
 
 def compress_binary(filename: str):
@@ -94,17 +119,6 @@ def compress_binary(filename: str):
         # Add the lookup table as overhead at the end of the file
         for key, value in lookup_table.items():
             compressed_file.write(key + value)
-
-def get_original(b: bytes):
-    """Check if the byte is in the lookup table and get the original byte before decompression"""
-
-    if (b in lookup_table.keys()):
-        b1: bytes = get_original(lookup_table[b][0].to_bytes())
-        b2: bytes = get_original(lookup_table[b][1].to_bytes())
-
-        return b1 + b2
-
-    return b
     
 
 def decompress_binary(filename: str):
@@ -115,14 +129,13 @@ def decompress_binary(filename: str):
 
     decompressed_data = b""
 
-    # Use the redundant information to construct dict
-    print(lookup_table)
+    # Use the redundant information to construct dict before decompression
+    reconstruction_dict = reconstruct_dict(file_data)
+    data_len = len(file_data) - len(reconstruction_dict) * 3
 
-    print(file_data[0])
-    print(file_data[-3 * file_data[0]].to_bytes())
     # Iterate through every file in the compressed file and find every byte in the lookup table recursively
-    for i in range(len(file_data)):
-        decompressed_data += get_original(file_data[i].to_bytes())
+    for i in range(1, data_len):
+        decompressed_data += get_original(file_data[i].to_bytes(), reconstruction_dict)
 
 
     with open(file=filename.replace(".xip", "_decompressed.xml"), mode="wb") as decompressed_file:
@@ -131,8 +144,8 @@ def decompress_binary(filename: str):
 
 
 if (__name__ == "__main__"):
-    print("Compressing...")
-    compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
+    #print("Compressing...")
+    #compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
 
     print("Decompressing...")
     decompress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xip")
