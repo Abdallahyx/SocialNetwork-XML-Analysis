@@ -83,8 +83,17 @@ def compress_binary(filename: str):
         compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
         data_len = len(compressed_data)
 
+    replacement_length = len(lookup_table.keys()).to_bytes()
+
     with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
+        # Write lengh of the bytes used for compression
+        compressed_file.write(replacement_length)
+
         compressed_file.write(compressed_data)
+        
+        # Add the lookup table as overhead at the end of the file
+        for key, value in lookup_table.items():
+            compressed_file.write(key + value)
 
 def get_original(b: bytes):
     """Check if the byte is in the lookup table and get the original byte before decompression"""
@@ -106,6 +115,11 @@ def decompress_binary(filename: str):
 
     decompressed_data = b""
 
+    # Use the redundant information to construct dict
+    print(lookup_table)
+
+    print(file_data[0])
+    print(file_data[-3 * file_data[0]].to_bytes())
     # Iterate through every file in the compressed file and find every byte in the lookup table recursively
     for i in range(len(file_data)):
         decompressed_data += get_original(file_data[i].to_bytes())
