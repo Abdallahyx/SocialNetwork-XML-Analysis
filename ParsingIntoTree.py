@@ -96,7 +96,7 @@ def TreeParsing(xml,Nod=None,start=0):
         if(char=='<' and xml[i+1]=='/'):
             current_node.set_value(''.join(parentnodevalue)) 
     
-    tree.m_root.set_value(''.join(parentnodevalue))
+    tree.m_root.set_value(''.join(parentnodevalue)) #making sure the root node has a value
    
     return (tree.m_root)
 
@@ -108,6 +108,8 @@ def ParseintoTree(filepath):
     tree=Tree()
     tree.set_root(TreeParsing(xml))
     return tree
-tree=ParseintoTree('New Text Document.xml')
-print(tree.m_root.value)
-print(tree.format())
+
+
+tree=ParseintoTree('New Text Document.xml')#checking
+print(tree.m_root.value)#checking root has value
+print(tree.format())#checking of tree returned
