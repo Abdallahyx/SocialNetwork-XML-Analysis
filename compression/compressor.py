@@ -1,151 +1,161 @@
 
 import random
 
-"""TODO: Move lookup table to a file maybe or add it to the file as overhead
-
+"""
     TODO: Class structure
 
 """
 
+class XIPCompressor():
+    """ an XML file compressor
 
-lookup_table = {}
+        Methods: compress_binary(filename: str)
+            Used to compress an XML file to binary XIP format with a greate compression ratio
 
+                decompress_binary(filepath: str)
+            Used to decompress binary XIP formatted file to an XML formatted document
+    """
 
-# Original data is a member in the class structure later
-def get_replacement(original_data: bytes) -> bytes:
-    """ Get a replacement byte and make sure it is not in the lookup table"""
-
-    unique_byte_count = len(set(original_data))
+    __instance = None
     
-    if (len(lookup_table.items()) == (256 - unique_byte_count)):
-        raise Exception("Maximum characters reached in lookup table, maximum compression reached")
+    def __new__(cls):
+        if (cls.__instance is None):
+            cls.__instance = super().__new__(cls)
 
-    replacement = random.randbytes(1)
+        return cls.__instance
 
-    if (replacement in lookup_table.keys() or replacement in original_data):
-        replacement = get_replacement(original_data)
+    def __init__(self):
+        self.__lookup_table = {}
 
-    return replacement
-
-def get_original(b: bytes, table: dict):
-    """Check if the byte is in the lookup table and get the original byte before decompression"""
-
-    if (b in table.keys()):
-        b1: bytes = get_original(table[b][0].to_bytes(), table)
-        b2: bytes = get_original(table[b][1].to_bytes(), table)
-
-        return b1 + b2
-
-    return b
-
-def max_pair(data: dict):
-    max_freq: int = 0
-
-    for key, freq in data.items():
-        if (freq >= max_freq):
-            max_freq = freq
-            max_pair = key
+        self.__raw_file_data: bytes = None
 
 
-    return max_pair, max_freq
+    # Original data is a member in the class structure later
+    def __get_replacement(self) -> bytes:
+        """ Get a replacement byte and make sure it is not in the lookup table"""
 
-def reconstruct_dict(data: bytes):
-    """Used to reconstruct the lookup table from the data found in the compressed file"""
-
-    byte_len = data[0]
-    table_chunk = data[(-3 * byte_len):]
-
-    table = {}
-
-    for i in range(0, 3 * byte_len, 3):
-        table[table_chunk[i].to_bytes()] = table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
-
-    return table
-
-
-
-def compress_binary(filename: str):
-    """Open the file data as binary and try to compress it"""
-
-    # Open the file in binary format
-    with open(file=filename, mode="rb") as file_binary:
-        file_data = file_binary.read()
-        data_len = len(file_data)
-
-    # Placeholder for the highest occuring object in the last loop
-    last_pair_frequency = 0
-
-    compressed_data = file_data
-
-    while (last_pair_frequency != 1):
-        pairs = {}
-
-        # Loop through the data and make a pair-freqency dict
-        for i in range(data_len - 1):
-            first_iter = compressed_data[i]
-            second_iter = compressed_data[i + 1]
-
-            pair = first_iter.to_bytes() + second_iter.to_bytes()
-
-            if (pair in pairs):
-                pairs[pair] += 1
-
-            else:
-                pairs[pair] = 1
+        unique_byte_count = len(set(self.__raw_file_data))
         
-        try:
-            replacement = get_replacement(file_data)
-        except Exception as e:
-            print(e)
-            break
+        if (len(self.__lookup_table.items()) == (256 - unique_byte_count)):
+            raise Exception("Maximum characters reached in lookup table, maximum compression reached")
 
-        highest_occuring_pair, last_pair_frequency = max_pair(pairs)
+        replacement = random.randbytes(1)
 
-        # Add the random byte to the lookup table
-        lookup_table[replacement] = highest_occuring_pair
+        if (replacement in self.__lookup_table.keys() or replacement in self.__raw_file_data):
+            replacement = self.__get_replacement()
 
-        # Replace two bytes with a single byte
-        compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
-        data_len = len(compressed_data)
+        return replacement
 
-    replacement_length = len(lookup_table.keys()).to_bytes()
+    def __get_original(self, b: bytes, table: dict):
+        """Check if the byte is in the lookup table and get the original byte before decompression"""
 
-    with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
-        # Write lengh of the bytes used for compression
-        compressed_file.write(replacement_length)
+        if (b in table.keys()):
+            b1: bytes = self.__get_original(table[b][0].to_bytes(), table)
+            b2: bytes = self.__get_original(table[b][1].to_bytes(), table)
 
-        compressed_file.write(compressed_data)
+            return b1 + b2
+
+        return b
+
+    def __max_pair(self, data: dict):
+        max_freq: int = 0
+
+        for key, freq in data.items():
+            if (freq >= max_freq):
+                max_freq = freq
+                max_pair = key
+
+
+        return max_pair, max_freq
+
+    def __reconstruct_dict(self, data: bytes):
+        """Used to reconstruct the lookup table from the data found in the compressed file"""
+
+        byte_len = data[0]
+        table_chunk = data[(-3 * byte_len):]
+
+        table = {}
+
+        for i in range(0, 3 * byte_len, 3):
+            table[table_chunk[i].to_bytes()] = table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
+
+        return table
+
+
+
+    def compress_binary(self, filename: str):
+        """Open the file data as binary and try to compress it"""
+
+        # Open the file in binary format
+        with open(file=filename, mode="rb") as file_binary:
+            self.__raw_file_data = file_binary.read()
+            data_len = len(self.__raw_file_data)
+
+        # Placeholder for the highest occuring object in the last loop
+        last_pair_frequency = 0
+
+        compressed_data = self.__raw_file_data
+
+        while (last_pair_frequency != 1):
+            pairs = {}
+
+            # Loop through the data and make a pair-freqency dict
+            for i in range(data_len - 1):
+                first_iter = compressed_data[i]
+                second_iter = compressed_data[i + 1]
+
+                pair = first_iter.to_bytes() + second_iter.to_bytes()
+
+                if (pair in pairs):
+                    pairs[pair] += 1
+
+                else:
+                    pairs[pair] = 1
+            
+            try:
+                replacement = self.__get_replacement()
+            except Exception as e:
+                print(e)
+                break
+
+            highest_occuring_pair, last_pair_frequency = self.__max_pair(pairs)
+
+            # Add the random byte to the lookup table
+            self.__lookup_table[replacement] = highest_occuring_pair
+
+            # Replace two bytes with a single byte
+            compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
+            data_len = len(compressed_data)
+
+        replacement_length = len(self.__lookup_table.keys()).to_bytes()
+
+        with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
+            # Write lengh of the bytes used for compression
+            compressed_file.write(replacement_length)
+
+            compressed_file.write(compressed_data)
+            
+            # Add the lookup table as overhead at the end of the file
+            for key, value in self.__lookup_table.items():
+                compressed_file.write(key + value)
         
-        # Add the lookup table as overhead at the end of the file
-        for key, value in lookup_table.items():
-            compressed_file.write(key + value)
-    
 
-def decompress_binary(filename: str):
-    """ Decompress the file back tp its original format """
-    
-    with open(file=filename, mode="rb") as file_binary:
-        file_data = file_binary.read()
+    def decompress_binary(self, filename: str):
+        """ Decompress the file back tp its original format """
+        
+        with open(file=filename, mode="rb") as file_binary:
+            compressed_file_data = file_binary.read()
 
-    decompressed_data = b""
+        decompressed_data = b""
 
-    # Use the redundant information to construct dict before decompression
-    reconstruction_dict = reconstruct_dict(file_data)
-    data_len = len(file_data) - len(reconstruction_dict) * 3
+        # Use the redundant information to construct dict before decompression
+        reconstruction_dict = self.__reconstruct_dict(compressed_file_data)
+        data_len = len(compressed_file_data) - len(reconstruction_dict) * 3
 
-    # Iterate through every file in the compressed file and find every byte in the lookup table recursively
-    for i in range(1, data_len):
-        decompressed_data += get_original(file_data[i].to_bytes(), reconstruction_dict)
+        # Iterate through every file in the compressed file and find every byte in the lookup table recursively
+        for i in range(1, data_len):
+            decompressed_data += self.__get_original(compressed_file_data[i].to_bytes(), reconstruction_dict)
 
 
-    with open(file=filename.replace(".xip", "_decompressed.xml"), mode="wb") as decompressed_file:
-        decompressed_file.write(decompressed_data)
-
-
-
-if (__name__ == "__main__"):
-    #print("Compressing...")
-    #compress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xml")
-
-    print("Decompressing...")
-    decompress_binary(r"C:\Users\abdel\OneDrive\Desktop\DSA-Project\compression\sample.xip")
+        with open(file=filename.replace(".xip", "_decompressed.xml"), mode="wb") as decompressed_file:
+            decompressed_file.write(decompressed_data)
