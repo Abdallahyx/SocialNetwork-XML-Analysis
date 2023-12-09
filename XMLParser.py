@@ -55,7 +55,7 @@ xml_string = """<?xml version="1.0" encoding="UTF-8" ?>
 <users>
     <user>
         <id>1</id>
-        <name>Ahmed Ali</name
+        <name>Ahmed Ali</name>
         <posts>
             <post>
                 <body>
