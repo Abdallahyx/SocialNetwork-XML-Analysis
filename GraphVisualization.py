@@ -9,9 +9,14 @@ def create_graph(xml_file):
 
     G = nx.DiGraph()
 
-    for user in root.findall(".//user"):
+    for user in root.findall("user"):
         user_id = int(user.find("id").text)
-        G.add_node(user_id)
+
+        if user.find("name") is not None:
+            user_name = user.find("name").text
+        else:
+            user_name = "unknown"
+        G.add_node(user_id, name=user_name)
 
         followers = user.find("followers")
         if followers is not None:
@@ -19,10 +24,13 @@ def create_graph(xml_file):
                 follower_id = int(follower.find("id").text)
                 G.add_edge(user_id, follower_id)
 
-        posts = user.find("posts")
-        if posts is not None:
-            post_texts = [post.text.strip() for post in posts.findall("post")]
-            G.nodes[user_id]['posts'] = post_texts
+        user_posts = user.find("posts")
+        if user_posts is not None:
+            posts = []
+            for post in user_posts.findall("post"):
+                posts.append(post)
+
+            G.nodes[user_id]['posts'] = posts
 
     pos = nx.spring_layout(G)
     nx.draw(G, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=8,
