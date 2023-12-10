@@ -2,16 +2,34 @@ def post_search(graph, keyword):
     matching_posts = []
 
     for user_id in graph.nodes:
+        user_name = graph.nodes[user_id]['name']
         user_posts = graph.nodes[user_id].get('posts', [])
+
         for post in user_posts:
-            if keyword.lower() in post.lower():
-                matching_posts.append((user_id, post))
+            if post.find("body") is not None:
+                post_body = post.find("body").text.strip()
+            else:
+                post_body = ""
+
+            # Check if the keyword is present in the post body
+            if keyword.lower() in post_body.lower():
+                matching_posts.append((user_id, user_name, post_body))
+                continue
+
+            # Check if the keyword is present in any topic
+            topics = post.find("topics")
+            if topics is not None:
+                for topic in topics.findall("topic"):
+                    topic_text = topic.text.strip()
+                    if keyword.lower() in topic_text.lower():
+                        matching_posts.append((user_id, user_name, post_body))
+                        break
 
     if not matching_posts:
-        print(f"No posts found containing the keyword '{keyword}'.")
+        print(f"There is no post whose topic is '{keyword}' or contain the keyword '{keyword}'.")
     else:
-        print(f"Posts containing the keyword '{keyword}':")
-        for user_id, post in matching_posts:
-            print(f"User ID {user_id}: {post}\n")
+        print(f"Posts whose topic is '{keyword}' or contain the word '{keyword}' in it:")
+        for user_id, user_name, post_body in matching_posts:
+            print(f"User ID: {user_id}, Name: {user_name}, Post: {post_body}\n")
 
     return matching_posts
