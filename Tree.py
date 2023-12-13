@@ -138,36 +138,8 @@ class Tree:
 
         output += '\n{}}}'.format(indent)
         return output
-    # def toJson(self, level=0, parent=None):
-    #     output = ""
-    #     kk = ""
-    #     if parent is None:
-    #         parent = self.m_root
-    #         level = 0
-    #     output=parent.key
-    #
-    #     for i in range(len(parent.children)):
-    #         node = parent.children[i]
-    #         spacing = ""*(level + 1)
-    #         output += spacing + '"' + node.key + '": '
-    #
-    #         if node.children:
-    #             output += self.toJson(level + 1, node)
-    #
-    #             if i == len(parent.children) - 1:
-    #                 output += "\t"
-    #             else:
-    #                 output += ",\n"
-    #         else:
-    #             if i == len(parent.children) - 1:
-    #                 output += '"' + node.value.lstrip().rstrip() + '"'
-    #             else:
-    #                 output += '"' + node.value.lstrip().rstrip() + '",\n'
-    #
-    #         kk = spacing
-    #
-    #
-    #     return "{" + output + "\n" + kk + "}"
+ 
+    
 # xml= """<users>
 #     <user>
 #         <id>1</id>
