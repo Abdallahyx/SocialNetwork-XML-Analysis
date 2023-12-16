@@ -3,13 +3,10 @@ class Node:
         self.key = key
         self.value = value
         self.children = []
-
     def set_value(self, value):
         self.value = value
-
     def set_key(self, key):
         self.key = key
-
     def find(self, key):
         if self.key == key:
             return self
@@ -21,14 +18,11 @@ class Node:
 
         return None
 
-
 class Tree:
     def __init__(self):
         self.m_root = None
-
     def set_root(self, t):
         self.m_root = t
-
     def add_node(self, node, parent=None):
         if parent is None:
             parent = self.m_root
