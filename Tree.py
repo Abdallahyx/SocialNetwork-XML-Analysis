@@ -10,6 +10,30 @@ class Node:
     def set_key(self, key):
         self.key = key
 
+    def add_node(self, node):
+        self.children.append(node)
+
+    def find(self, key):
+        if self.key == key:
+            return self
+
+        for child in self.children:
+            result = child.find(key)
+            if result:
+                return result
+
+        return None
+
+    def findall(self, key):
+        result = []
+        if self.key == key:
+            result.append(self)
+
+        for child in self.children:
+            result.extend(child.findall(key))
+
+        return result
+
 
 class Tree:
     def __init__(self):
@@ -23,7 +47,10 @@ class Tree:
             parent = self.m_root
         parent.children.append(node)
 
-    def format(self, depth=0, parent=None):
+    def getroot(self):
+        return self.m_root
+
+    def PrettifyFormat(self, depth=0, parent=None):
         if parent is None:
             parent = self.m_root
             depth = 0
@@ -31,28 +58,121 @@ class Tree:
         output = ""
         indentation = "    " * depth
 
-        output += indentation + "<" + parent.key + ">\n"
+        output += indentation + "<" + parent.key + f">{parent.value.lstrip()}\n"
 
         for i in range(len(parent.children)):
             node = parent.children[i]
 
             if node.children:
-                output += self.format(depth + 1, node)
+                output += self.PrettifyFormat(depth + 1, node)
             else:
                 output += (
-                    indentation
-                    + "    <"
-                    + node.key
-                    + ">"
-                    + node.value
-                    + "</"
-                    + node.key
-                    + ">\n"
+                        indentation
+                        + "    <"
+                        + node.key
+                        + ">"
+                        + node.value
+                        + "</"
+                        + node.key
+                        + ">\n"
                 )
 
         output += indentation + "</" + parent.key + ">\n"
 
         return output
+
+    def MinifyFormat(self, parent=None):
+        if parent is None:
+            parent = self.m_root
+
+        output = ""
+        parent_value = parent.value.lstrip().rstrip()
+        output += "<" + parent.key + f">{parent_value}"
+
+        for i in range(len(parent.children)):
+            node = parent.children[i]
+
+            if node.children:
+                output += self.MinifyFormat(node)
+            else:
+                output += (
+                        "<"
+                        + node.key
+                        + ">"
+                        + node.value.lstrip().rstrip()
+                        + "</"
+                        + node.key
+                        + ">"
+                )
+
+        output += "</" + parent.key + ">"
+
+        return output
+
+    def findall(self, key, parent=None):
+        if parent is None:
+            parent = self.m_root
+
+        result = []
+        if parent.key == key:
+            result.append(parent)
+
+        for child in parent.children:
+            result.extend(self.findall(key, child))
+
+        return result
+
+    def separate_lines(xml_file):
+        line = ""
+        line2 = ""
+        buffer = ""
+        with open(xml_file, "r") as file:
+            for line in file:
+                line = line.strip()
+                line2 += line
+        with open("test.txt", "w") as outfile:
+            inside_tag = False
+            for i in range(len(line2)):
+                if line2[i] == "<":
+                    if len(buffer) != 0:
+                        outfile.write(buffer + "\n")
+                        buffer = ""
+                    buffer += line2[i]
+                    inside_tag = True
+                else:
+                    buffer += line2[i]
+                if line2[i] == ">":
+                    inside_tag = False
+                    outfile.write(buffer + "\n")
+                    buffer = ""
+        print("Output written to test.txt")
+
+    def parse(xml_file):
+        Tree.separate_lines(xml_file)
+        with open("test.txt", "r") as file:
+            node_stack = []
+            imaginary_firstNode = Node()
+            node_stack.append(imaginary_firstNode)
+            cnt_line_number = 0
+            for line in file:
+                line = line.strip()
+                if line:
+                    cnt_line_number += 1
+                    if "<" in line:
+                        tag = line[line.find("<") + 1:line.find(">")]
+                        if tag[0] == "/":
+                            child = node_stack.pop()
+                            parent = node_stack[-1]
+                            parent.children.append(child)
+                        else:
+                            node = Node()
+                            node.set_key(tag)
+                            node_stack.append(node)
+                    else:
+                        node = node_stack[-1]
+                        node.value += line
+
+        return node_stack[-1]
 
 
 # # Example usage:
