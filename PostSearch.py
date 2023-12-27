@@ -1,9 +1,9 @@
 def post_search(graph, keyword):
     matching_posts = []
 
-    for user_id in graph.nodes:
-        user_name = graph.nodes[user_id].get('name', 'unknown')
-        user_posts = graph.nodes[user_id].get('posts', [])
+    for user in graph.nodes:
+        user_name = user.name
+        user_posts = user.posts
 
         for post in user_posts:
             if post.find("body") is not None:
@@ -13,7 +13,7 @@ def post_search(graph, keyword):
 
             # Check if the keyword is present in the post body
             if keyword.lower() in post_body.lower():
-                matching_posts.append((user_id, user_name, post_body))
+                matching_posts.append((user.id, user_name, post_body))
                 continue
 
             # Check if the keyword is present in any topic
@@ -22,7 +22,7 @@ def post_search(graph, keyword):
                 for topic in topics.findall("topic"):
                     topic_text = topic.value
                     if keyword.lower() in topic_text.lower():
-                        matching_posts.append((user_id, user_name, post_body))
+                        matching_posts.append((user.id, user_name, post_body))
                         break
 
     if not matching_posts:

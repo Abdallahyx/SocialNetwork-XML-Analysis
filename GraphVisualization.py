@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
+from Graph import DirectedGraph
 from XMLParser import Parse
 
 
@@ -9,7 +10,7 @@ def create_graph(xml_file):
     root = tree.getroot()
 
     if root is not None:
-        G = nx.DiGraph()
+        graph = DirectedGraph()
 
         for user in root.findall("user"):
             user_id = user.find("id").value
@@ -18,13 +19,13 @@ def create_graph(xml_file):
                 user_name = user.find("name").value
             else:
                 user_name = "unknown"
-            G.add_node(user_id, name=user_name)
+            graph.add_node(user_id, name=user_name)
 
             followers = user.find("followers")
             if followers is not None:
                 for follower in followers.findall("follower"):
                     follower_id = follower.find("id").value
-                    G.add_edge(user_id, follower_id)
+                    graph.add_edge(user_id, follower_id)
 
             user_posts = user.find("posts")
             if user_posts is not None:
@@ -32,15 +33,22 @@ def create_graph(xml_file):
                 for post in user_posts.findall("post"):
                     posts.append(post)
 
-                G.nodes[user_id]['posts'] = posts
+                graph.add_posts(user_id, posts)
 
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=8,
-                font_color="black", font_weight="bold", edge_color="skyblue", arrowsize=10, connectionstyle="arc3,rad=0.1",
-                edgecolors="#00b4d8")
+        # Create a directed graph from your data using NetworkX
+        nx_graph = nx.DiGraph()
+
+        for node in graph.nodes:
+            nx_graph.add_node(node.id, name=node.name)
+            for successor in node.successors:
+                nx_graph.add_edge(node.id, successor.id)
+
+        # Visualize the graph
+        pos = nx.spring_layout(nx_graph)  # You can use different layout algorithms
+        nx.draw(nx_graph, pos, with_labels=True, font_weight='bold', node_size=700, node_color='skyblue', arrowsize=10, font_size=8, edge_color="skyblue", connectionstyle="arc3,rad=0.1")
         plt.show()
 
-        return G
+        return graph
     else:
         print("Error: Tree root is not properly set.")
         return None

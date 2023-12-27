@@ -145,6 +145,7 @@ class Tree:
                     inside_tag = False
                     outfile.write(buffer + "\n")
                     buffer = ""
+        print("Output written to test.txt")
 
     def parse(xml_file):
         Tree.separate_lines(xml_file)
@@ -172,48 +173,3 @@ class Tree:
                         node.value += line
 
         return node_stack[-1]
-
-
-# # Example usage:
-# # Create nodes and tree
-# root_node = Node()
-# root_node.key = "root"
-
-# child1 = Node()
-# child1.key = "child1"
-# child1.set_value("value1")
-
-# child2 = Node()
-# child2.key = "child2"
-# child2.set_value("value2")
-
-# grandchild1 = Node()
-# grandchild1.key = "grandchild1"
-# grandchild1.set_value("value")
-
-# grandchild2 = Node()
-# grandchild2.key = "grandchild1"
-# grandchild2.set_value("value")
-
-# grandchild3 = Node()
-# grandchild3.key = "grandchild1"
-# grandchild3.set_value("value")
-
-# grandchild4 = Node()
-# grandchild4.key = "grandchild1"
-# grandchild4.set_value("value")
-
-
-# tree = Tree()
-# tree.set_root(root_node)
-# tree.add_node(child1, root_node)
-# tree.add_node(child2, root_node)
-# tree.add_node(grandchild1, child1)
-# tree.add_node(grandchild2, child1)
-# tree.add_node(grandchild3, child2)
-# tree.add_node(grandchild4, child2)
-
-
-# # Output the formatted tree
-# formatted_tree = tree.format()
-# print(formatted_tree)

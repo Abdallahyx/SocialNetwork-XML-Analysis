@@ -1,11 +1,12 @@
 # 1. Most Influential Users (Most Followers)
+# 1. Most Influential Users (Most Followers)
 def most_influential(graph):
     user_ids = []
     out_degrees = []
 
-    for user_id in graph.nodes:
-        user_ids.append(user_id)
-        out_degrees.append(len(list(graph.successors(user_id))))
+    for user in graph.nodes:
+        user_ids.append(user.id)
+        out_degrees.append(len(graph.successors(user.id)))
 
     max_out_degree = max(out_degrees)
 
@@ -20,9 +21,9 @@ def most_active(graph):
     user_ids = []
     total_edges = []
 
-    for user_id in graph.nodes:
-        user_ids.append(user_id)
-        total_edges.append(graph.degree(user_id))
+    for user in graph.nodes:
+        user_ids.append(user.id)
+        total_edges.append(graph.degree(user.id))
 
     max_total_edges = max(total_edges)
 
@@ -33,21 +34,19 @@ def most_active(graph):
 
 
 # 3.  Mutual followers between 2 users
-def mutual_followers(graph, node1, node2):
-    if node1 not in graph.nodes or node2 not in graph.nodes:
+def mutual_followers(graph, node1_id, node2_id):
+    node1 = graph.find_node(str(node1_id))
+    node2 = graph.find_node(str(node2_id))
+
+    if not node1 or not node2:
         print("Invalid nodes. Please provide existing nodes.")
         return None
 
-    followers_node1 = []
-    for successor in graph.successors(node1):
-        followers_node1.append(successor)
-
-    followers_node2 = []
-    for successor in graph.successors(node2):
-        followers_node2.append(successor)
+    followers_node1 = [successor.id for successor in graph.successors(str(node1_id))]
+    followers_node2 = [successor.id for successor in graph.successors(str(node2_id))]
 
     mut_followers = [follower for follower in followers_node1 if follower in followers_node2]
-    print(f"Mutual followers between nodes {node1} and {node2}: {mut_followers}")
+    print(f"Mutual followers between nodes {node1_id} and {node2_id}: {mut_followers}")
     return mut_followers
 
 
@@ -58,12 +57,12 @@ def suggest_followers(graph):
     for user in graph.nodes:
         user_suggestions = []
 
-        for successor in graph.successors(user):
-            for suggested_follower in graph.successors(successor):
-                if suggested_follower not in graph.predecessors(user) and suggested_follower != user and suggested_follower not in user_suggestions:
-                    user_suggestions.append(suggested_follower)
+        for successor in graph.successors(user.id):
+            for suggested_follower in graph.successors(successor.id):
+                if suggested_follower not in graph.predecessors(user.id) and suggested_follower.id != user.id and suggested_follower.id not in user_suggestions:
+                    user_suggestions.append(suggested_follower.id)
 
-        suggested_followers.append((user, user_suggestions))
+        suggested_followers.append((user.id, user_suggestions))
 
     for user, user_suggestions in suggested_followers:
         print(f"Suggested followers for User {user}: {user_suggestions}")
