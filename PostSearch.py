@@ -2,12 +2,12 @@ def post_search(graph, keyword):
     matching_posts = []
 
     for user_id in graph.nodes:
-        user_name = graph.nodes[user_id]['name']
+        user_name = graph.nodes[user_id].get('name', 'unknown')
         user_posts = graph.nodes[user_id].get('posts', [])
 
         for post in user_posts:
             if post.find("body") is not None:
-                post_body = post.find("body").text.strip()
+                post_body = post.find("body").value
             else:
                 post_body = ""
 
@@ -20,7 +20,7 @@ def post_search(graph, keyword):
             topics = post.find("topics")
             if topics is not None:
                 for topic in topics.findall("topic"):
-                    topic_text = topic.text.strip()
+                    topic_text = topic.value
                     if keyword.lower() in topic_text.lower():
                         matching_posts.append((user_id, user_name, post_body))
                         break
