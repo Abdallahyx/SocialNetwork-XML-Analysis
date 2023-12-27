@@ -50,6 +50,13 @@ def XMLParse(XML_String):
     return tree
 
 
+def Parse(filepath):
+    with open(filepath,'r') as file:
+        xml = file.read()
+    tree = XMLParse(xml)
+    return tree
+
+
 # Example usage:
 xml_string = """<?xml version="1.0" encoding="UTF-8" ?>
 <users>
