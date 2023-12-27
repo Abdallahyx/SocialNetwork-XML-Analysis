@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from Tree import Tree
 
+
 def create_graph(xml_file):
     root = Tree.parse(xml_file)
 
@@ -10,7 +11,7 @@ def create_graph(xml_file):
         G = nx.DiGraph()
 
         for user in root.findall("user"):
-            user_id = int(user.find("id").value)
+            user_id = user.find("id").value
 
             if user.find("name") is not None:
                 user_name = user.find("name").value
@@ -21,7 +22,7 @@ def create_graph(xml_file):
             followers = user.find("followers")
             if followers is not None:
                 for follower in followers.findall("follower"):
-                    follower_id = int(follower.find("id").value)
+                    follower_id = follower.find("id").value
                     G.add_edge(user_id, follower_id)
 
             user_posts = user.find("posts")
