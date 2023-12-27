@@ -145,7 +145,6 @@ class Tree:
                     inside_tag = False
                     outfile.write(buffer + "\n")
                     buffer = ""
-        print("Output written to test.txt")
 
     def parse(xml_file):
         Tree.separate_lines(xml_file)
