@@ -110,6 +110,5 @@ def ParseintoTree(filepath):
     return tree
 
 
-tree=ParseintoTree('New Text Document.xml')#checking
-print(tree.m_root.value)#checking root has value
-print(tree.format())#checking of tree returned
+#tree=ParseintoTree('New Text Document.xml') pass the file path to the function and the return type is tree
+#print(tree.format()) Check the validity of the tree by printing it using format
