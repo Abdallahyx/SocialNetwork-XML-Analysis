@@ -1,11 +1,12 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-from Tree import Tree
+from XMLParser import Parse
 
 
 def create_graph(xml_file):
-    root = Tree.parse(xml_file)
+    tree = Parse(xml_file)
+    root = tree.getroot()
 
     if root is not None:
         G = nx.DiGraph()
