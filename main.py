@@ -3,7 +3,7 @@ from NetworkAnalysis import *
 from PostSearch import post_search
 
 
-xml_file = "example3.xml"
+xml_file = "example.xml"
 graph = create_graph(xml_file)
 
 most_influential(graph)
