@@ -1,11 +1,14 @@
 from customtkinter import *
-from PIL import Image
+from CTkMessagebox import CTkMessagebox
 
 app = CTk()
-app.minsize(1080, 745)
-app.maxsize(1080, 745)
+app.minsize(1080, 780)
+app.maxsize(1080, 780)
 app.title("SocialConnectX")
 
+def show_error():
+   #Show some error message
+   CTkMessagebox(title="Error", message="Something went wrong!!!", icon="cancel")
 
 frameTop = CTkFrame(master=app, width=827, height=100, border_width=2, border_color='white', fg_color='transparent')
 framemiddle = CTkFrame(master=app, width=827, height=500, border_width=2, border_color='white', fg_color='transparent')
@@ -31,8 +34,9 @@ RedoButton.pack(side="right", padx=10, pady=15)
 SaveButton.pack(side="right", padx=10, pady=15)
 ProgramName.pack(side="right", anchor='center', padx=190, pady=15)
 
+OptionName = CTkLabel(master=frameBottom, text="Options", width=70, height=1, font=('Helvetica', 18, 'bold'))
 ParseButton = CTkButton(master=frameBottom, text="Parse", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
-Check_and_FixButton = CTkButton(master=frameBottom, text="Check and Fix", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
+Check_and_FixButton = CTkButton(master=frameBottom, text="Check and Fix", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=show_error)
 Xml_TO_JSONButton = CTkButton(master=frameBottom, text="Xml TO JSON", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
 CompressButton = CTkButton(master=frameBottom, text="Compresse", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
 decompressButton = CTkButton(master=frameBottom, text="Decompress", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
@@ -42,6 +46,7 @@ Show_GraphButton = CTkButton(master=frameBottom2, text="Show Graph", width=130, 
 Graph_analysisButton = CTkButton(master=frameBottom2, text="Graph analysis", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
 Post_SearchButton = CTkButton(master=frameBottom2, text="Post Search", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
 
+OptionName.grid(row=1, column=2, sticky="nsew", padx=40, pady=5)
 ParseButton.grid(row=2, column=0, sticky="nsew", padx=40, pady=15)
 Check_and_FixButton.grid(row=2, column=1, sticky="nsew", padx=40, pady=15)
 Xml_TO_JSONButton.grid(row=2, column=2, sticky="nsew", padx=40, pady=15)
@@ -54,9 +59,10 @@ Graph_analysisButton.grid(row=3, column=3, sticky="nsew", padx=40, pady=15)
 Post_SearchButton.grid(row=3, column=4, sticky="nsew", padx=40, pady=15)
 
 CodeTextBox = CTkTextbox(master=framemiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18))
-outputTextBox = CTkTextbox(master=framemiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18))
+outputTextBox = CTkTextbox(master=framemiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18),state="disabled")
 
 CodeTextBox.grid(row=0, column=0, sticky="nsew", padx=20, pady=15)
 outputTextBox.grid(row=0, column=1, sticky="nsew", padx=20, pady=15)
+
 
 app.mainloop()
