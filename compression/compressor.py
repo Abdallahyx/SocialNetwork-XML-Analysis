@@ -131,33 +131,36 @@ class XIPCompressor():
 
         replacement_length = len(self.__lookup_table).to_bytes()
 
-        with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
+        #with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
             # Write lengh of the bytes used for compression
-            compressed_file.write(replacement_length)
+        #    compressed_file.write(replacement_length)
 
-            compressed_file.write(compressed_data)
+        #    compressed_file.write(compressed_data)
             
             # Add the lookup table as overhead at the end of the file
-            for key, value in self.__lookup_table.items():
-                compressed_file.write(key + value)
+        #    for key, value in self.__lookup_table.items():
+        #        compressed_file.write(key + value)
+
+        compressed_output = replacement_length + compressed_data
+
+        for key, value in self.__lookup_table.items():
+            compressed_output += (key + value)
+
+        return compressed_output
         
 
-    def decompress_binary(self, filename: str):
+    def decompress_binary(self, compressed_bytes: bytes):
         """ Decompress the file back tp its original format """
-        
-        with open(file=filename, mode="rb") as file_binary:
-            compressed_file_data = file_binary.read()
 
         decompressed_data = b""
 
         # Use the redundant information to construct dict before decompression
-        reconstruction_dict = self.__reconstruct_dict(compressed_file_data)
-        data_len = len(compressed_file_data) - len(reconstruction_dict) * 3
+        reconstruction_dict = self.__reconstruct_dict(compressed_bytes)
+        data_len = len(compressed_bytes) - len(reconstruction_dict) * 3
 
         # Iterate through every file in the compressed file and find every byte in the lookup table recursively
         for i in range(1, data_len):
-            decompressed_data += self.__get_original(compressed_file_data[i].to_bytes(), reconstruction_dict)
+            decompressed_data += self.__get_original(compressed_bytes[i].to_bytes(), reconstruction_dict)
 
 
-        with open(file=filename.replace(".xip", "_decompressed.xml"), mode="wb") as decompressed_file:
-            decompressed_file.write(decompressed_data)
+        return decompressed_data
