@@ -30,12 +30,12 @@ class DirectedGraph:
         if not self.find_node(user_id):
             self.nodes.append(Node(user_id, name))
 
-    def add_edge(self, user_id, follower_id):
+    def add_edge(self, user_id, follower_id, follower_name):
         user_node = self.find_node(user_id)
         follower_node = self.find_node(follower_id)
 
         if not follower_node:
-            follower_node = Node(follower_id, f"User{follower_id}")
+            follower_node = Node(follower_id, follower_name)
             self.nodes.append(follower_node)
 
         if user_node and follower_node:
@@ -71,6 +71,3 @@ class DirectedGraph:
 # print([node.id for node in graph.successors(1)])
 # print([node.id for node in graph.predecessors(2)])
 # print(graph.degree(1))
-
-
-
