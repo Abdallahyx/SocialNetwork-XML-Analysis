@@ -1,4 +1,3 @@
-
 from customtkinter import *
 from CTkMessagebox import CTkMessagebox
 
@@ -24,14 +23,22 @@ class SocialConnectXApp:
         self.create_top_buttons()
         self.create_bottom_buttons()
         self.create_middle_textboxes()
-
-
+        self.CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18))
+        self.CodeTextBox.grid(row=0, column=0, sticky="nsew", padx=20, pady=15) # CodeTextBox is a class variable
+        # Initialize history list to store XML content after each edit
+        self.history = []
+        self.state_snapshots = []
+        self.redo_snapshots = []
+        self.add_state()
+        # Set up event binding for keyboard actions
+        self.CodeTextBox.bind("<Key>", self.update_history)
+        self.filename = None
     def create_top_buttons(self):
-        SaveButton = CTkButton(master=self.frameTop, text="Save", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
-        UndoButton = CTkButton(master=self.frameTop, text="Undo", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
-        RedoButton = CTkButton(master=self.frameTop, text="Redo", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
-        ImportButton = CTkButton(master=self.frameTop, text="Import", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
-        ExportButton = CTkButton(master=self.frameTop, text="Export", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
+        SaveButton = CTkButton(master=self.frameTop, text="Save", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.add_state)
+        UndoButton = CTkButton(master=self.frameTop, text="Undo", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.undo)
+        RedoButton = CTkButton(master=self.frameTop, text="Redo", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.redo)
+        ImportButton = CTkButton(master=self.frameTop, text="Import", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command= self.UploadAction)
+        ExportButton = CTkButton(master=self.frameTop, text="Export", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.file_save)
         ProgramName = CTkLabel(master=self.frameTop, text="SocialConnectX", width=70, height=40, font=('Helvetica', 22, 'bold'))
 
         ImportButton.pack(side="left", padx=10, pady=15)
@@ -67,10 +74,7 @@ class SocialConnectXApp:
        Post_SearchButton.grid(row=3, column=4, sticky="nsew", padx=40, pady=15)
 
     def create_middle_textboxes(self):
-        CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18))
         outputTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18), state="disabled")
-
-        CodeTextBox.grid(row=0, column=0, sticky="nsew", padx=20, pady=15)
         outputTextBox.grid(row=0, column=1, sticky="nsew", padx=20, pady=15)
 
     def show_checkmark(self):
@@ -84,6 +88,52 @@ class SocialConnectXApp:
     def run(self):
         self.app.mainloop()
 
+    def add_state(self):
+        # Add the current state to state_snapshots
+        current_state = self.CodeTextBox.get(1.0, END)
+        self.state_snapshots.append(current_state)
+        # Clear the redo_snapshots when a new state is added
+        self.redo_snapshots = []
+
+    def undo(self):
+        # Check if there are states to undo to
+        if len(self.state_snapshots) > 1:
+            # Get the last state from state_snapshots and update the text widget
+            current_state = self.state_snapshots.pop()
+            target_state = self.state_snapshots[-1]
+            self.redo_snapshots.append(current_state)
+            self.CodeTextBox.delete(1.0,END)
+            self.CodeTextBox.insert(END, target_state)
+
+    def redo(self):
+        # Check if there are states to redo to
+        if self.redo_snapshots:
+            # Get the last state from redo_snapshots and update the text widget
+            target_state = self.redo_snapshots.pop()
+            self.state_snapshots.append(target_state)
+            self.CodeTextBox.delete(1.0, END)
+            self.CodeTextBox.insert(END, target_state)
+
+    def update_history(self, event):
+        # Capture XML content after each edit and add it to history
+        current_state = self.CodeTextBox.get(1.0, END)
+        self.history.append(current_state)
+
+    def UploadAction(self):
+        filetypes = (
+            ('text files', '*.xml'),
+            ('All files', '*.*')
+        )
+        filename = filedialog.askopenfilename(filetypes =filetypes )
+        self.filename = filename
+
+    def file_save(self):
+        f = filedialog.asksaveasfile(mode='w', defaultextension=".xml")
+        if f is None:  # asksaveasfile return `None` if dialog closed with "cancel".
+            return
+        text2save = str(self.CodeTextBox.get(1.0, END))  # starts from `1.0`, not `0.0`
+        f.write(text2save)
+        f.close()  # `()` was missing
 
 if __name__ == "__main__":
     app = SocialConnectXApp()
