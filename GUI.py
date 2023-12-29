@@ -4,8 +4,8 @@ from CTkMessagebox import CTkMessagebox
 class SocialConnectXApp:
     def __init__(self):
         self.app = CTk()
-        self.app.minsize(1080, 780)
-        self.app.maxsize(1080, 780)
+        self.app.minsize(1080, 800)
+        self.app.maxsize(1080, 800)
         self.app.title("SocialConnectX")
 
         # Frames
@@ -23,8 +23,8 @@ class SocialConnectXApp:
         self.create_top_buttons()
         self.create_bottom_buttons()
         self.create_middle_textboxes()
-        self.CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18))
-        self.CodeTextBox.grid(row=0, column=0, sticky="nsew", padx=20, pady=15) # CodeTextBox is a class variable
+        self.CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 14))
+        self.CodeTextBox.grid(row=1, column=0, sticky="nsew", padx=20, pady=8)  # CodeTextBox is a class variable
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -74,8 +74,12 @@ class SocialConnectXApp:
        Post_SearchButton.grid(row=3, column=4, sticky="nsew", padx=40, pady=15)
 
     def create_middle_textboxes(self):
-        outputTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 18), state="disabled")
-        outputTextBox.grid(row=0, column=1, sticky="nsew", padx=20, pady=15)
+        CodeName = CTkLabel(master=self.frameMiddle, text="Xml Code", width=70, height=1,font=('Helvetica', 18, 'bold'))
+        OutputName = CTkLabel(master=self.frameMiddle, text="Output", width=70, height=1,font=('Helvetica', 18, 'bold'))
+        outputTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 14), state="disabled")
+        CodeName.grid(row=0, column=0, sticky="nsew", padx=20, pady=2)
+        OutputName.grid(row=0, column=1, sticky="nsew", padx=20, pady=2)
+        outputTextBox.grid(row=1, column=1, sticky="nsew", padx=20, pady=8)
 
     def show_checkmark(self):
        # Show some positive message with the checkmark icon
@@ -133,7 +137,8 @@ class SocialConnectXApp:
             return
         text2save = str(self.CodeTextBox.get(1.0, END))  # starts from `1.0`, not `0.0`
         f.write(text2save)
-        f.close()  # `()` was missing
+        f.close()
+
 
 if __name__ == "__main__":
     app = SocialConnectXApp()
