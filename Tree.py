@@ -336,7 +336,7 @@ class Tree:
 
     ### Another Function for the parsing
 
-    def TreeParsing(self, xml, Nod=None, start=0):
+    def TreeParsing(self, xml, Nod=None, start=0): #O(N) time and space complexity
         open_tag = False
         tag = []
         tree = Tree()
