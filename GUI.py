@@ -4,15 +4,15 @@ from CTkMessagebox import CTkMessagebox
 class SocialConnectXApp:
     def __init__(self):
         self.app = CTk()
-        self.app.minsize(1080, 800)
-        self.app.maxsize(1080, 800)
+        self.app.minsize(1160, 900)
+        self.app.maxsize(1160, 900)
         self.app.title("SocialConnectX")
 
         # Frames
-        self.frameTop = CTkFrame(master=self.app, width=827, height=100, border_width=2, border_color='white', fg_color='transparent')
-        self.frameMiddle = CTkFrame(master=self.app, width=827, height=500, border_width=2, border_color='white', fg_color='transparent')
-        self.frameBottom = CTkFrame(master=self.app, width=827, height=200, border_width=2, border_color='white', fg_color='transparent')
-        self.frameBottom2 = CTkFrame(master=self.app, width=827, height=200, border_width=2, border_color='white', fg_color='transparent')
+        self.frameTop = CTkFrame(master=self.app, width=900, height=100, border_width=2, border_color='white', fg_color='transparent')
+        self.frameMiddle = CTkFrame(master=self.app, width=900, height=500, border_width=2, border_color='white', fg_color='transparent')
+        self.frameBottom = CTkFrame(master=self.app, width=900, height=200, border_width=2, border_color='white', fg_color='transparent')
+        self.frameBottom2 = CTkFrame(master=self.app, width=900, height=200, border_width=2, border_color='white', fg_color='transparent')
 
         self.frameTop.grid(row=0, column=0, sticky="nsew")
         self.frameMiddle.grid(row=1, column=0, sticky="nsew")
@@ -23,8 +23,16 @@ class SocialConnectXApp:
         self.create_top_buttons()
         self.create_bottom_buttons()
         self.create_middle_textboxes()
-        self.CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 14))
-        self.CodeTextBox.grid(row=1, column=0, sticky="nsew", padx=20, pady=8)  # CodeTextBox is a class variable
+        self.CodeTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=("Courier New", 14))
+        self.CodeTextBox.grid(row=1, column=1, sticky="nsew", padx=20, pady=8)  # CodeTextBox is a class variable
+        self.line_numbers1 = CTkTextbox(master=self.frameMiddle, width=12, height=5, bg_color= 'lightgray', state='disabled',font=("Courier New", 12))
+        self.line_numbers1.grid(row=1, column=0, sticky='nsew',pady=8)
+        self.update_line_numbers()
+        # To DO tomorrow 
+        self.CodeTextBox.bind('<KeyRelease>', lambda event: self.update_line_numbers())
+        line_numbers_scrollbar = CTkScrollbar(master=self.line_numbers1, command=self.line_numbers1.yview,minimum_pixel_length=2)
+        line_numbers_scrollbar.grid(row=0, column=1, sticky='nsew')
+        self.line_numbers1.configure(yscrollcommand=line_numbers_scrollbar.set)
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -33,6 +41,7 @@ class SocialConnectXApp:
         # Set up event binding for keyboard actions
         self.CodeTextBox.bind("<Key>", self.update_history)
         self.filename = None
+        
     def create_top_buttons(self):
         SaveButton = CTkButton(master=self.frameTop, text="Save", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.add_state)
         UndoButton = CTkButton(master=self.frameTop, text="Undo", width=70, height=40, border_width=2, border_color='black', font=('Helvetica', 18),command=self.undo)
@@ -61,25 +70,32 @@ class SocialConnectXApp:
        Graph_analysisButton = CTkButton(master=self.frameBottom2, text="Graph analysis", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
        Post_SearchButton = CTkButton(master=self.frameBottom2, text="Post Search", width=130, height=40, border_width=2, border_color='black', font=('Helvetica', 18))
 
-       OptionName.grid(row=1, column=2, sticky="nsew", padx=40, pady=5)
-       ParseButton.grid(row=2, column=0, sticky="nsew", padx=40, pady=15)
-       Check_and_FixButton.grid(row=2, column=1, sticky="nsew", padx=40, pady=15)
-       Xml_TO_JSONButton.grid(row=2, column=2, sticky="nsew", padx=40, pady=15)
-       CompressButton.grid(row=2, column=3, sticky="nsew", padx=40, pady=15)
-       DecompressButton.grid(row=2, column=4, sticky="nsew", padx=40, pady=15)
-       PrettifyButton.grid(row=3, column=0, sticky="nsew", padx=40, pady=15)
-       MinifyButton.grid(row=3, column=1, sticky="nsew", padx=40, pady=15)
-       Show_GraphButton.grid(row=3, column=2, sticky="nsew", padx=40, pady=15)
-       Graph_analysisButton.grid(row=3, column=3, sticky="nsew", padx=40, pady=15)
-       Post_SearchButton.grid(row=3, column=4, sticky="nsew", padx=40, pady=15)
+       OptionName.grid(row=1, column=3, sticky="nsew", padx=50, pady=5)
+       ParseButton.grid(row=2, column=1, sticky="nsew", padx=50, pady=15)
+       Check_and_FixButton.grid(row=2, column=2, sticky="nsew", padx=50, pady=15)
+       Xml_TO_JSONButton.grid(row=2, column=3, sticky="nsew", padx=50, pady=15)
+       CompressButton.grid(row=2, column=4, sticky="nsew", padx=50, pady=15)
+       DecompressButton.grid(row=2, column=5, sticky="nsew", padx=50, pady=15)
+       PrettifyButton.grid(row=3, column=1, sticky="nsew", padx=50, pady=15)
+       MinifyButton.grid(row=3, column=2, sticky="nsew", padx=50, pady=15)
+       Show_GraphButton.grid(row=3, column=3, sticky="nsew", padx=50, pady=15)
+       Graph_analysisButton.grid(row=3, column=4, sticky="nsew", padx=50, pady=15)
+       Post_SearchButton.grid(row=3, column=5, sticky="nsew", padx=50, pady=15)
 
     def create_middle_textboxes(self):
         CodeName = CTkLabel(master=self.frameMiddle, text="Xml Code", width=70, height=1,font=('Helvetica', 18, 'bold'))
         OutputName = CTkLabel(master=self.frameMiddle, text="Output", width=70, height=1,font=('Helvetica', 18, 'bold'))
-        outputTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=('Helvetica', 14), state="disabled")
-        CodeName.grid(row=0, column=0, sticky="nsew", padx=20, pady=2)
-        OutputName.grid(row=0, column=1, sticky="nsew", padx=20, pady=2)
-        outputTextBox.grid(row=1, column=1, sticky="nsew", padx=20, pady=8)
+        outputTextBox = CTkTextbox(master=self.frameMiddle, width=500, height=500, border_width=2, border_color='black', font=("Courier New", 14), state="disabled")
+        # To DO tomorrow 
+        line_numbers2 = CTkTextbox(master=self.frameMiddle, width=4, height=20,bg_color= 'lightgray', state='disabled')
+        line_numbers2.grid(row=1, column=2, sticky='nsew')
+        line_numbers_scrollbar2 = CTkScrollbar(master=line_numbers2, command=line_numbers2.yview,minimum_pixel_length=2)
+        line_numbers_scrollbar2.grid(row=0, column=1, sticky='nsew')
+        line_numbers2.configure(yscrollcommand=line_numbers_scrollbar2.set)
+        # self.CodeTextBox.bind('<KeyRelease>', lambda event: self.update_line_numbers(line_numbers2, outputTextBox))
+        CodeName.grid(row=0, column=1, sticky="nsew", padx=20, pady=2)
+        OutputName.grid(row=0, column=3, sticky="nsew", padx=20, pady=2)
+        outputTextBox.grid(row=1, column=3, sticky="nsew", padx=20, pady=8)
 
     def show_checkmark(self):
        # Show some positive message with the checkmark icon
@@ -138,6 +154,17 @@ class SocialConnectXApp:
         text2save = str(self.CodeTextBox.get(1.0, END))  # starts from `1.0`, not `0.0`
         f.write(text2save)
         f.close()
+
+    def update_line_numbers(self):
+        # Get the current number of lines in the code Text widget
+        total_lines1 = int(self.CodeTextBox.index('end-1c').split('.')[0])
+
+        # Update the line numbers in the line_numbers Text widget
+        self.line_numbers1.configure(state='normal')
+        self.line_numbers1.delete('1.0', 'end')
+        for line in range(1, total_lines1 + 1):
+            self.line_numbers1.insert('end', str(line) + '\n')
+        self.line_numbers1.configure(state='disabled')
 
 
 if __name__ == "__main__":
