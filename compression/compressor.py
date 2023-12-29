@@ -1,6 +1,8 @@
 
 import random
 
+from structures.bytedict import ByteDict
+
 """
     TODO: Class structure
 
@@ -25,7 +27,7 @@ class XIPCompressor():
         return cls.__instance
 
     def __init__(self):
-        self.__lookup_table = {}
+        self.__lookup_table = ByteDict(256)
 
         self.__raw_file_data: bytes = None
 
@@ -36,7 +38,7 @@ class XIPCompressor():
 
         unique_byte_count = len(set(self.__raw_file_data))
         
-        if (len(self.__lookup_table.items()) == (256 - unique_byte_count)):
+        if (len(self.__lookup_table) == (256 - unique_byte_count)):
             raise Exception("Maximum characters reached in lookup table, maximum compression reached")
 
         replacement = random.randbytes(1)
@@ -57,7 +59,7 @@ class XIPCompressor():
 
         return b
 
-    def __max_pair(self, data: dict):
+    def __max_pair(self, data: ByteDict):
         max_freq: int = 0
 
         for key, freq in data.items():
@@ -74,7 +76,7 @@ class XIPCompressor():
         byte_len = data[0]
         table_chunk = data[(-3 * byte_len):]
 
-        table = {}
+        table = ByteDict()
 
         for i in range(0, 3 * byte_len, 3):
             table[table_chunk[i].to_bytes()] = table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
@@ -97,7 +99,7 @@ class XIPCompressor():
         compressed_data = self.__raw_file_data
 
         while (last_pair_frequency != 1):
-            pairs = {}
+            pairs = ByteDict(len(compressed_data))
 
             # Loop through the data and make a pair-freqency dict
             for i in range(data_len - 1):
@@ -127,7 +129,7 @@ class XIPCompressor():
             compressed_data = compressed_data.replace(highest_occuring_pair, replacement)
             data_len = len(compressed_data)
 
-        replacement_length = len(self.__lookup_table.keys()).to_bytes()
+        replacement_length = len(self.__lookup_table).to_bytes()
 
         with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
             # Write lengh of the bytes used for compression
