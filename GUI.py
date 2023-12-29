@@ -1,3 +1,4 @@
+
 from customtkinter import *
 from CTkMessagebox import CTkMessagebox
 import customtkinter
@@ -16,9 +17,9 @@ class SocialConnectXApp:
                                  fg_color='#1a1a1a')
         self.frameMiddle = CTkFrame(master=self.app, width=900, height=500, border_width=1, border_color='black',
                                     fg_color='#4d4d4d')
-        self.frameBottom = CTkFrame(master=self.app, width=900, height=200, border_width=1, border_color='black',
+        self.frameBottom = CTkFrame(master=self.app, width=900, height=200, border_width=0, border_color='black',
                                     fg_color='#333333')
-        self.frameBottom2 = CTkFrame(master=self.app, width=900, height=200, border_width=1, border_color='black',
+        self.frameBottom2 = CTkFrame(master=self.app, width=900, height=200, border_width=0, border_color='black',
                                      fg_color='#333333')
 
         self.frameTop.grid(row=0, column=0, sticky="nsew")
@@ -72,39 +73,39 @@ class SocialConnectXApp:
     def create_bottom_buttons(self):
         OptionName = CTkLabel(master=self.frameBottom, text="Options", width=70, height=1,
                               font=('Segoe UI', 22, 'bold'))
-        ParseButton = CTkButton(master=self.frameBottom, text="Parse", width=130, height=40, border_width=2,
+        ParseButton = CTkButton(master=self.frameBottom, text="Parse", width=135, height=40, border_width=2,
                                 border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        Check_and_FixButton = CTkButton(master=self.frameBottom, text="Check and Fix", width=130, height=40,
+        Check_and_FixButton = CTkButton(master=self.frameBottom, text="Check and Fix", width=135, height=40,
                                         border_width=2, border_color='black', font=("Segoe UI", 18,"bold"),
                                         command=self.show_error,fg_color="#999999",text_color="black")
-        Xml_TO_JSONButton = CTkButton(master=self.frameBottom, text="Xml TO JSON", width=130, height=40, border_width=2,
+        Xml_TO_JSONButton = CTkButton(master=self.frameBottom, text="Xml TO JSON", width=135, height=40, border_width=2,
                                       border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        CompressButton = CTkButton(master=self.frameBottom, text="Compresse", width=130, height=40, border_width=2,
+        CompressButton = CTkButton(master=self.frameBottom, text="Compresse", width=135, height=40, border_width=2,
                                    border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        DecompressButton = CTkButton(master=self.frameBottom, text="Decompress", width=130, height=40, border_width=2,
+        DecompressButton = CTkButton(master=self.frameBottom, text="Decompress", width=135, height=40, border_width=2,
                                      border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        PrettifyButton = CTkButton(master=self.frameBottom2, text="Prettify", width=130, height=40, border_width=2,
+        PrettifyButton = CTkButton(master=self.frameBottom2, text="Prettify", width=135, height=40, border_width=2,
                                    border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        MinifyButton = CTkButton(master=self.frameBottom2, text="Minify", width=130, height=40, border_width=2,
+        MinifyButton = CTkButton(master=self.frameBottom2, text="Minify", width=135, height=40, border_width=2,
                                  border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        Show_GraphButton = CTkButton(master=self.frameBottom2, text="Show Graph", width=130, height=40, border_width=2,
+        Show_GraphButton = CTkButton(master=self.frameBottom2, text="Show Graph", width=135, height=40, border_width=2,
                                      border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        Graph_analysisButton = CTkButton(master=self.frameBottom2, text="Graph analysis", width=130, height=40,
+        Graph_analysisButton = CTkButton(master=self.frameBottom2, text="Graph analysis", width=135, height=40,
                                          border_width=2, border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
-        Post_SearchButton = CTkButton(master=self.frameBottom2, text="Post Search", width=130, height=40,
+        Post_SearchButton = CTkButton(master=self.frameBottom2, text="Post Search", width=135, height=40,
                                       border_width=2, border_color='black', font=("Segoe UI", 18,"bold"),fg_color="#999999",text_color="black")
 
-        OptionName.grid(row=1, column=3, sticky="nsew", padx=50, pady=5)
-        ParseButton.grid(row=2, column=1, sticky="nsew", padx=50, pady=15)
-        Check_and_FixButton.grid(row=2, column=2, sticky="nsew", padx=50, pady=15)
-        Xml_TO_JSONButton.grid(row=2, column=3, sticky="nsew", padx=50, pady=15)
-        CompressButton.grid(row=2, column=4, sticky="nsew", padx=50, pady=15)
-        DecompressButton.grid(row=2, column=5, sticky="nsew", padx=50, pady=15)
-        PrettifyButton.grid(row=3, column=1, sticky="nsew", padx=50, pady=15)
-        MinifyButton.grid(row=3, column=2, sticky="nsew", padx=50, pady=15)
-        Show_GraphButton.grid(row=3, column=3, sticky="nsew", padx=50, pady=15)
-        Graph_analysisButton.grid(row=3, column=4, sticky="nsew", padx=50, pady=15)
-        Post_SearchButton.grid(row=3, column=5, sticky="nsew", padx=50, pady=15)
+        OptionName.grid(row=1, column=3, sticky="nsew", padx=48, pady=5)
+        ParseButton.grid(row=2, column=1, sticky="nsew", padx=48, pady=15)
+        Check_and_FixButton.grid(row=2, column=2, sticky="nsew", padx=48, pady=15)
+        Xml_TO_JSONButton.grid(row=2, column=3, sticky="nsew", padx=48, pady=15)
+        CompressButton.grid(row=2, column=4, sticky="nsew", padx=48, pady=15)
+        DecompressButton.grid(row=2, column=5, sticky="nsew", padx=48, pady=15)
+        PrettifyButton.grid(row=3, column=1, sticky="nsew", padx=48, pady=15)
+        MinifyButton.grid(row=3, column=2, sticky="nsew", padx=48, pady=15)
+        Show_GraphButton.grid(row=3, column=3, sticky="nsew", padx=48, pady=15)
+        Graph_analysisButton.grid(row=3, column=4, sticky="nsew", padx=48, pady=15)
+        Post_SearchButton.grid(row=3, column=5, sticky="nsew", padx=48, pady=15)
 
     def create_middle_textboxes(self):
         CodeName = CTkLabel(master=self.frameMiddle, text="Xml Code", width=70, height=1,
