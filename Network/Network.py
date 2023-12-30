@@ -85,6 +85,15 @@ class Network:
         return suggested_followers
 
     def create_graph(self, tree):
+        """
+        Create a directed graph from an XML tree.
+
+        Args:
+            tree (xml.etree.ElementTree.ElementTree): The XML tree.
+
+        Returns:
+            Graph.Graph.DirectedGraph: The created graph.
+        """
         root = tree.getroot()
 
         if root is not None:
@@ -122,6 +131,12 @@ class Network:
             return None
 
     def show_graph(self, graph):
+        """
+        Visualize the graph using NetworkX and Matplotlib.
+
+        Args:
+            graph (Graph.Graph.DirectedGraph): The graph to visualize.
+        """
         # Create a directed graph from your data using NetworkX
         nx_graph = nx.DiGraph()
 
@@ -130,7 +145,7 @@ class Network:
             for successor in node.successors:
                 nx_graph.add_edge(node.id, successor.id)
 
-            # Visualize the graph
+        # Visualize the graph
         pos = nx.spring_layout(nx_graph)  # You can use different layout algorithms
         nx.draw(
             nx_graph,
@@ -147,6 +162,16 @@ class Network:
         plt.show()
 
     def post_search(self, graph, keyword):
+        """
+        Search for posts containing a specific keyword.
+
+        Args:
+            graph (Graph.Graph.DirectedGraph): The graph containing the posts.
+            keyword (str): The keyword to search for.
+
+        Returns:
+            list: A list of matching posts, each represented as a tuple (user_id, user_name, post_body).
+        """
         matching_posts = []
 
         for user in graph.nodes:
