@@ -67,6 +67,7 @@ class SocialConnectXApp:
         self.create_top_buttons()
         self.create_bottom_buttons()
         self.create_middle_textboxes()
+
         self.CodeTextBox = CTkTextbox(
             master=self.frameMiddle,
             width=500,
@@ -74,9 +75,12 @@ class SocialConnectXApp:
             border_width=2,
             border_color="black",
             font=("Segoe UI", 14, "bold"),
+            activate_scrollbars=False,
         )
+        self.Scrollbar = CTkScrollbar(master=self.frameMiddle, command=self.scroll_function,height=500,)
+        self.CodeTextBox.configure(yscrollcommand=self.on_textscroll)
         self.CodeTextBox.grid(
-            row=1, column=1, sticky="nsew", padx=20, pady=8
+            row=1, column=1, sticky="nsew", padx=0, pady=8
         )  # CodeTextBox is a class variable
         self.outputTextBox = CTkTextbox(
             master=self.frameMiddle,
@@ -94,14 +98,17 @@ class SocialConnectXApp:
             height=5,
             fg_color="#999999",
             state="disabled",
-            font=("Courier New", 12, "bold"),
+            font=("Segoe UI", 14, "bold"),
             activate_scrollbars=False,
             text_color="black",
+            yscrollcommand=self.on_textscroll,
         )
         self.line_numbers1.grid(row=1, column=0, sticky="nsew", pady=8, padx=20)
         self.update_line_numbers()
         # To DO tomorrow
         self.CodeTextBox.bind("<KeyRelease>", lambda event: self.update_line_numbers())
+
+        self.Scrollbar.grid(row=1, column=2, sticky="nsew")
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -110,6 +117,15 @@ class SocialConnectXApp:
         # Set up event binding for keyboard actions
         self.CodeTextBox.bind("<Key>", self.update_history)
 
+    def scroll_function(self, *args):
+        self.CodeTextBox.yview(*args)
+        self.line_numbers1.yview(*args)
+
+    def on_textscroll(self, *args):
+        '''Moves the scrollbar and scrolls text widgets when the mousewheel
+        is moved on a text widget'''
+        self.Scrollbar.set(*args)
+        self.scroll_function('moveto', args[0])
     def create_top_buttons(self):
         SaveButton = CTkButton(
             master=self.frameTop,
@@ -491,7 +507,7 @@ class SocialConnectXApp:
             suggested_followers = Network().suggest_followers(self.graph)
             for user, user_suggestions in suggested_followers:
                 message += f"Suggested followers for User {user}: {user_suggestions}\n"
-            ToplevelWindow(message=message)
+            CTkMessagebox(title="Network Analysis", message=message, icon="info")
         except Exception as e:
             CTkMessagebox(title="Network Analysis Error", message=str(e), icon="cancel")
 
@@ -513,8 +529,7 @@ class SocialConnectXApp:
             else:
                 message += f"{'User ID':<25}{'Name':<100}{'Post':<50}\n"
                 for user_id, user_name, post_body in posts:
-                    message += f"{user_id:<25}{user_name:<{80-len(user_name)}}{post_body[:50]:<50}\n"
-                print(message)
+                    message += f"{user_id:<25}{user_name:<{100-len(user_name)}}{post_body[:50]:<50}\n"
                 ToplevelWindow(message=message)
         except Exception as e:
             CTkMessagebox(title="Post Search Error", message=str(e), icon="cancel")
