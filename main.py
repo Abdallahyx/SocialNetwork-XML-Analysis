@@ -1,4 +1,4 @@
-from GUI import SocialConnectXApp
+from Gui.GUI import SocialConnectXApp
 
 
 if __name__ == "__main__":

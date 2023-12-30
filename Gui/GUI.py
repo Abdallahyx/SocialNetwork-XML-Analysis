@@ -1,10 +1,11 @@
 from customtkinter import *
 from CTkMessagebox import CTkMessagebox
 import customtkinter
-from Tree import Tree
-from Network import Network
-from compressor import XIPCompressor
-from Graph import DirectedGraph
+
+from Tree.Tree import Tree
+from Network.Network import Network
+from Compressor.compressor import XIPCompressor
+from Graph.Graph import DirectedGraph
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
@@ -342,25 +343,12 @@ class SocialConnectXApp:
             height=1,
             font=("Segoe UI", 18, "bold"),
         )
-        # self.CodeTextBox.bind('<KeyRelease>', lambda event: self.update_line_numbers(line_numbers2, outputTextBox))
         CodeName.grid(row=0, column=1, sticky="nsew", padx=20, pady=5)
         OutputName.grid(row=0, column=3, sticky="nsew", padx=20, pady=5)
 
-    # def show_checkmark(self):
-    #     # Show some positive message with the checkmark icon
-    #     CTkMessagebox(
-    #         message="CTkMessagebox is successfully installed.",
-    #         icon="check",
-    #         option_1="Thanks",
-    #     )
-
     def parse(self):
         self.Check_Fix()
-        self.tree = self.tree.ParseString(self.xml)
-        self.graph = Network.create_graph(self.tree)
-        CTkMessagebox(
-            title="XML Parser", message="XML is parsed successfully", icon="info"
-        )
+        self.graph = Network().create_graph(self.tree)
 
     def Check_Fix(self):
         self.out, errors = self.tree.Consistency(self.xml)
@@ -397,8 +385,8 @@ class SocialConnectXApp:
         self.extension = ".xml"
 
     def ShowGraph(self):
-        self.graph = Network.create_graph(self.tree)
-        Network.show_graph(self.graph)
+        self.graph = Network().create_graph(self.tree)
+        Network().show_graph(self.graph)
 
     def Compress(self):
         compressed_data = XIPCompressor().compress_binary(self.importepath)
@@ -431,15 +419,15 @@ class SocialConnectXApp:
         )
         follower_id2 = dialog.get_input()  # waits for input
         message = ""
-        most_influential_users = Network.most_influential(self.graph)
+        most_influential_users = Network().most_influential(self.graph)
         message += f"The most influential users are: {most_influential_users}\n"
-        most_active_users = Network.most_active(self.graph)
+        most_active_users = Network().most_active(self.graph)
         message += f"The most active users are: {most_active_users}\n"
-        mutualfollowers = Network.mutual_followers(
+        mutualfollowers = Network().mutual_followers(
             self.graph, follower_id1, follower_id2
         )
         message += f"Mutual followers between Users {follower_id1} and {follower_id2}: {mutualfollowers}\n"
-        suggested_followers = Network.suggest_followers(self.graph)
+        suggested_followers = Network().suggest_followers(self.graph)
         for user, user_suggestions in suggested_followers:
             message += f"Suggested followers for User {user}: {user_suggestions}\n"
         CTkMessagebox(title="Network Analysis", message=message, icon="info")
@@ -450,7 +438,7 @@ class SocialConnectXApp:
             title="Post Search",
         )
         keyword = dialog.get_input()  # waits for input
-        posts = Network.post_search(self.graph, keyword)
+        posts = Network().post_search(self.graph, keyword)
         message = ""
         if not posts:
             message += f"There is no post whose topic is '{keyword}' or contain the keyword '{keyword}'."

@@ -1,10 +1,9 @@
 import random
 
-from bytedict import ByteDict
+from Bytedict.bytedict import ByteDict
 
-"""
-    TODO: Class structure
-
+"""    
+ This file contains the implementation of the XIPCompressor class, which is used to compress and decompress XML files.
 """
 
 
@@ -12,7 +11,7 @@ class XIPCompressor:
     """an XML file compressor
 
     Methods: compress_binary(filename: str)
-        Used to compress an XML file to binary XIP format with a greate compression ratio
+        Used to compress an XML file to binary XIP format with a great compression ratio
 
             decompress_binary(filepath: str)
         Used to decompress binary XIP formatted file to an XML formatted document
@@ -33,7 +32,17 @@ class XIPCompressor:
 
     # Original data is a member in the class structure later
     def __get_replacement(self) -> bytes:
-        """Get a replacement byte and make sure it is not in the lookup table"""
+        """Get a replacement byte and make sure it is not in the lookup table
+
+        This method generates a random byte and checks if it is already present in the lookup table or the raw file data.
+        If it is, it recursively calls itself to generate a new replacement byte.
+
+        Returns:
+            bytes: A replacement byte that is not present in the lookup table or the raw file data.
+
+        Raises:
+            Exception: If the maximum number of unique characters is reached in the lookup table, maximum compression is reached.
+        """
 
         unique_byte_count = len(set(self.__raw_file_data))
 
@@ -45,15 +54,26 @@ class XIPCompressor:
         replacement = random.randbytes(1)
 
         if (
-            replacement in self.__lookup_table.keys()
-            or replacement in self.__raw_file_data
+                replacement in self.__lookup_table.keys()
+                or replacement in self.__raw_file_data
         ):
             replacement = self.__get_replacement()
 
         return replacement
 
     def __get_original(self, b: bytes, table: dict):
-        """Check if the byte is in the lookup table and get the original byte before decompression"""
+        """Check if the byte is in the lookup table and get the original byte before decompression
+
+        This method checks if the given byte is present in the lookup table.
+        If it is, it recursively calls itself to get the original byte before compression.
+
+        Args:
+            b (bytes): The byte to check.
+            table (dict): The lookup table.
+
+        Returns:
+            bytes: The original byte before compression.
+        """
 
         if b in table.keys():
             b1: bytes = self.__get_original(table[b][0].to_bytes(), table)
@@ -64,6 +84,16 @@ class XIPCompressor:
         return b
 
     def __max_pair(self, data: ByteDict):
+        """Find the pair with the highest frequency in the given ByteDict
+
+        Args:
+            data (ByteDict): The ByteDict containing pairs and their frequencies.
+
+        Returns:
+            bytes: The pair with the highest frequency.
+            int: The frequency of the pair.
+        """
+
         max_freq: int = 0
 
         for key, freq in data.items():
@@ -74,29 +104,46 @@ class XIPCompressor:
         return max_pair, max_freq
 
     def __reconstruct_dict(self, data: bytes):
-        """Used to reconstruct the lookup table from the data found in the compressed file"""
+        """Reconstruct the lookup table from the data found in the compressed file
+
+        Args:
+            data (bytes): The data found in the compressed file.
+
+        Returns:
+            dict: The reconstructed lookup table.
+        """
 
         byte_len = data[0]
-        table_chunk = data[(-3 * byte_len) :]
+        table_chunk = data[(-3 * byte_len):]
 
         table = ByteDict()
 
         for i in range(0, 3 * byte_len, 3):
             table[table_chunk[i].to_bytes()] = (
-                table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
+                    table_chunk[i + 1].to_bytes() + table_chunk[i + 2].to_bytes()
             )
 
         return table
 
     def compress_binary(self, filename: str):
-        """Open the file data as binary and try to compress it"""
+        """Open the file data as binary and try to compress it
+
+        This method opens the specified file in binary mode and reads its contents.
+        It then compresses the data using the XIP compression algorithm.
+
+        Args:
+            filename (str): The path to the file to be compressed.
+
+        Returns:
+            bytes: The compressed data.
+        """
 
         # Open the file in binary format
         with open(file=filename, mode="rb") as file_binary:
             self.__raw_file_data = file_binary.read()
             data_len = len(self.__raw_file_data)
 
-        # Placeholder for the highest occuring object in the last loop
+        # Placeholder for the highest occurring object in the last loop
         last_pair_frequency = 0
 
         compressed_data = self.__raw_file_data
@@ -104,7 +151,7 @@ class XIPCompressor:
         while last_pair_frequency != 1:
             pairs = ByteDict(len(compressed_data))
 
-            # Loop through the data and make a pair-freqency dict
+            # Loop through the data and make a pair-frequency dict
             for i in range(data_len - 1):
                 first_iter = compressed_data[i]
                 second_iter = compressed_data[i + 1]
@@ -136,16 +183,6 @@ class XIPCompressor:
 
         replacement_length = len(self.__lookup_table).to_bytes()
 
-        # with open(file=filename.replace(".xml", ".xip"), mode="wb") as compressed_file:
-        # Write lengh of the bytes used for compression
-        #    compressed_file.write(replacement_length)
-
-        #    compressed_file.write(compressed_data)
-
-        # Add the lookup table as overhead at the end of the file
-        #    for key, value in self.__lookup_table.items():
-        #        compressed_file.write(key + value)
-
         compressed_output = replacement_length + compressed_data
 
         for key, value in self.__lookup_table.items():
@@ -154,7 +191,16 @@ class XIPCompressor:
         return compressed_output
 
     def decompress_binary(self, compressed_bytes: bytes):
-        """Decompress the file back tp its original format"""
+        """Decompress the file back to its original format
+
+        This method takes the compressed data and decompresses it using the XIP decompression algorithm.
+
+        Args:
+            compressed_bytes (bytes): The compressed data.
+
+        Returns:
+            bytes: The decompressed data.
+        """
 
         decompressed_data = b""
 
