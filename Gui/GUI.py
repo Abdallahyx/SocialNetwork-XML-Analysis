@@ -90,6 +90,8 @@ class SocialConnectXApp:
             border_color="black",
             font=("Segoe UI", 14, "bold"),
             state="disabled",
+            activate_scrollbars=True,
+            wrap="none",
         )
         self.outputTextBox.grid(row=1, column=3, sticky="nsew", padx=20, pady=8)
         self.line_numbers1 = CTkTextbox(
@@ -108,7 +110,7 @@ class SocialConnectXApp:
         # To DO tomorrow
         self.CodeTextBox.bind("<KeyRelease>", lambda event: self.update_line_numbers())
 
-        self.Scrollbar.grid(row=1, column=2, sticky="nsew")
+        self.Scrollbar.grid(row=1, column=2, sticky="nsew",pady=5)
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -125,7 +127,7 @@ class SocialConnectXApp:
         '''Moves the scrollbar and scrolls text widgets when the mousewheel
         is moved on a text widget'''
         self.Scrollbar.set(*args)
-        self.scroll_function('moveto', args[0])
+        self.scroll_function(customtkinter.MOVETO, args[0])
     def create_top_buttons(self):
         SaveButton = CTkButton(
             master=self.frameTop,
