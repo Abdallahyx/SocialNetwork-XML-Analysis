@@ -430,7 +430,7 @@ class SocialConnectXApp:
             self.graph = Network().create_graph(self.tree)
             Network().show_graph(self.graph)
         except Exception as e:
-            CTkMessagebox(title="Graph Display Error", message=str(e), icon="cancel")
+            CTkMessagebox(title="Graph Display Error", message=str(e), icon="cancel",width=500,font=("Segoe UI", 14, "bold"))
 
     def Compress(self):
         try:
@@ -491,7 +491,7 @@ class SocialConnectXApp:
             suggested_followers = Network().suggest_followers(self.graph)
             for user, user_suggestions in suggested_followers:
                 message += f"Suggested followers for User {user}: {user_suggestions}\n"
-            CTkMessagebox(title="Network Analysis", message=message, icon="info")
+            ToplevelWindow(message=message)
         except Exception as e:
             CTkMessagebox(title="Network Analysis Error", message=str(e), icon="cancel")
 
@@ -511,17 +511,18 @@ class SocialConnectXApp:
             if not posts:
                 message += f"There is no post whose topic is '{keyword}' or contains the keyword '{keyword}'."
             else:
-                message += f"Posts whose topic is '{keyword}' or contains the word '{keyword}' in it:\n"
+                message += f"{'User ID':<25}{'Name':<100}{'Post':<50}\n"
                 for user_id, user_name, post_body in posts:
-                    message += (
-                        f"User ID: {user_id}, Name: {user_name}, Post: {post_body}\n"
-                    )
-            CTkMessagebox(title="Post Search", message=message, icon="info")
+                    message += f"{user_id:<25}{user_name:<{80-len(user_name)}}{post_body[:50]:<50}\n"
+                print(message)
+                ToplevelWindow(message=message)
         except Exception as e:
             CTkMessagebox(title="Post Search Error", message=str(e), icon="cancel")
 
     def run(self):
         self.app.mainloop()
+
+
 
     def add_state(self):
         # Add the current state to state_snapshots
@@ -606,3 +607,11 @@ class SocialConnectXApp:
             self.line_numbers1.insert("end", str(line) + "\n")
         self.line_numbers1.configure(state="disabled")
         self.line_numbers1.yview(END)
+
+
+class ToplevelWindow(customtkinter.CTkToplevel):
+    def __init__(self,message, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.label = customtkinter.CTkLabel(self, text=message, font=("Segoe UI", 14, "bold"),justify = LEFT)
+        self.label.pack(padx=20, pady=20)
