@@ -347,106 +347,178 @@ class SocialConnectXApp:
         OutputName.grid(row=0, column=3, sticky="nsew", padx=20, pady=5)
 
     def parse(self):
-        self.Check_Fix()
-        self.graph = Network().create_graph(self.tree)
+        try:
+            self.Check_Fix()
+            if self.tree.getroot() is None:
+                raise ValueError("XML parsing resulted in an empty tree")
+            self.graph = Network().create_graph(self.tree)
+        except Exception as e:
+            CTkMessagebox(title="Parsing Error", message=str(e), icon="cancel")
 
     def Check_Fix(self):
-        self.out, errors = self.tree.Consistency(self.xml)
-        message = ""
-        if errors:
-            for error in errors:
-                message += str(error) + "\n"
-            message += "XML is Fixed"
-        else:
-            message = "XML is Consistent"
+        try:
+            self.out, errors = self.tree.Consistency(self.xml)
+            message = ""
+            if errors:
+                for error in errors:
+                    message += str(error) + "\n"
+                message += "XML is Fixed"
+            else:
+                message = "XML is Consistent"
 
-        CTkMessagebox(
-            title="XML Parser", message="XML is parsed successfully", icon="info"
-        )
+            CTkMessagebox(
+                title="XML Parser", message="XML is parsed successfully", icon="info"
+            )
 
-        self.update_Output()
-        self.tree = self.tree.ParseString(self.out)
-        CTkMessagebox(title="XML Consistency", message=message, icon="info")
-        self.extension = ".xml"
+            self.update_Output()
+            self.tree = self.tree.ParseString(self.out)
+            CTkMessagebox(title="XML Consistency", message=message, icon="info")
+            self.extension = ".xml"
+        except Exception as e:
+            CTkMessagebox(
+                title="Consistency Check Error", message=str(e), icon="cancel"
+            )
 
     def XML2JSON(self):
-        self.out = self.tree.toJson()
-        self.update_Output()
-        self.extension = ".json"
+        try:
+            if self.tree.getroot() is None:
+                raise ValueError(
+                    "No XML content available for conversion to JSON, Parse Your XML First."
+                )
+
+            self.out = self.tree.toJson()
+            self.update_Output()
+            self.extension = ".json"
+        except Exception as e:
+            CTkMessagebox(
+                title="XML to JSON Conversion Error", message=str(e), icon="cancel"
+            )
 
     def Prettify(self):
-        self.out = self.tree.PrettifyFormat()
-        self.update_Output()
-        self.extension = ".xml"
+        try:
+            if self.tree.getroot() is None:
+                raise ValueError(
+                    "No XML content available for prettification, Parse Your XML First."
+                )
+
+            self.out = self.tree.PrettifyFormat()
+            self.update_Output()
+            self.extension = ".xml"
+        except Exception as e:
+            CTkMessagebox(title="Prettification Error", message=str(e), icon="cancel")
 
     def Minify(self):
-        self.out = self.tree.MinifyFormat()
-        self.update_Output()
-        self.extension = ".xml"
+        try:
+            if self.tree.getroot() is None:
+                raise ValueError(
+                    "No XML content available for minification, Parse Your XML First."
+                )
+
+            self.out = self.tree.MinifyFormat()
+            self.update_Output()
+            self.extension = ".xml"
+        except Exception as e:
+            CTkMessagebox(title="Minification Error", message=str(e), icon="cancel")
 
     def ShowGraph(self):
-        self.graph = Network().create_graph(self.tree)
-        Network().show_graph(self.graph)
+        try:
+            if self.tree.getroot() is None:
+                raise ValueError(
+                    "No XML content available for creating a Graph, Parse Your XML First."
+                )
+
+            self.graph = Network().create_graph(self.tree)
+            Network().show_graph(self.graph)
+        except Exception as e:
+            CTkMessagebox(title="Graph Display Error", message=str(e), icon="cancel")
 
     def Compress(self):
-        compressed_data = XIPCompressor().compress_binary(self.importepath)
-        f = filedialog.asksaveasfile(mode="wb", defaultextension=".xip")
-        if f is None:  # asksaveasfile return `None` if dialog closed with "cancel".
-            return
-        f.write(compressed_data)
-        f.close()
+        try:
+            if not self.importepath:
+                raise ValueError("No file path provided for compression")
+
+            compressed_data = XIPCompressor().compress_binary(self.importepath)
+            f = filedialog.asksaveasfile(mode="wb", defaultextension=".xip")
+            if f is None:  # asksaveasfile return `None` if dialog closed with "cancel".
+                return
+            f.write(compressed_data)
+            f.close()
+        except Exception as e:
+            CTkMessagebox(title="Compression Error", message=str(e), icon="cancel")
 
     def Decompress(self):
-        filetypes = (("text files", "*.xip"), ("All files", "*.*"))
-        filename = filedialog.askopenfilename(filetypes=filetypes)
-        with open(filename, "rb") as file:
-            compressed_data = file.read()
-        decompressed_data = XIPCompressor().decompress_binary(compressed_data)
-        with open(
-            file=filename.replace(".xip", "_decompressed.xml"), mode="wb"
-        ) as decompressed_file:
-            decompressed_file.write(decompressed_data)
+        try:
+            filetypes = (("text files", "*.xip"), ("All files", "*.*"))
+            filename = filedialog.askopenfilename(filetypes=filetypes)
+            if not filename:
+                raise ValueError("No file selected for decompression")
+
+            with open(filename, "rb") as file:
+                compressed_data = file.read()
+            decompressed_data = XIPCompressor().decompress_binary(compressed_data)
+            with open(
+                file=filename.replace(".xip", "_decompressed.xml"), mode="wb"
+            ) as decompressed_file:
+                decompressed_file.write(decompressed_data)
+        except Exception as e:
+            CTkMessagebox(title="Decompression Error", message=str(e), icon="cancel")
 
     def NetworkAnalysis(self):
-        dialog = CTkInputDialog(
-            text="Enter first follower ID",
-            title="Mutual Followers between 2 Followers",
-        )
-        follower_id1 = dialog.get_input()  # waits for input
-        dialog = CTkInputDialog(
-            text="Enter second follower ID",
-            title="Mutual Followers between 2 Followers",
-        )
-        follower_id2 = dialog.get_input()  # waits for input
-        message = ""
-        most_influential_users = Network().most_influential(self.graph)
-        message += f"The most influential users are: {most_influential_users}\n"
-        most_active_users = Network().most_active(self.graph)
-        message += f"The most active users are: {most_active_users}\n"
-        mutualfollowers = Network().mutual_followers(
-            self.graph, follower_id1, follower_id2
-        )
-        message += f"Mutual followers between Users {follower_id1} and {follower_id2}: {mutualfollowers}\n"
-        suggested_followers = Network().suggest_followers(self.graph)
-        for user, user_suggestions in suggested_followers:
-            message += f"Suggested followers for User {user}: {user_suggestions}\n"
-        CTkMessagebox(title="Network Analysis", message=message, icon="info")
+        try:
+            dialog = CTkInputDialog(
+                text="Enter first follower ID",
+                title="Mutual Followers between 2 Followers",
+            )
+            follower_id1 = dialog.get_input()  # waits for input
+            dialog = CTkInputDialog(
+                text="Enter second follower ID",
+                title="Mutual Followers between 2 Followers",
+            )
+            follower_id2 = dialog.get_input()  # waits for input
+
+            if not follower_id1 and not follower_id2:
+                raise ValueError("No IDs provided for Analysis")
+
+            message = ""
+            most_influential_users = Network().most_influential(self.graph)
+            message += f"The most influential users are: {most_influential_users}\n"
+            most_active_users = Network().most_active(self.graph)
+            message += f"The most active users are: {most_active_users}\n"
+            mutualfollowers = Network().mutual_followers(
+                self.graph, follower_id1, follower_id2
+            )
+            message += f"Mutual followers between Users {follower_id1} and {follower_id2}: {mutualfollowers}\n"
+            suggested_followers = Network().suggest_followers(self.graph)
+            for user, user_suggestions in suggested_followers:
+                message += f"Suggested followers for User {user}: {user_suggestions}\n"
+            CTkMessagebox(title="Network Analysis", message=message, icon="info")
+        except Exception as e:
+            CTkMessagebox(title="Network Analysis Error", message=str(e), icon="cancel")
 
     def PostSearch(self):
-        dialog = CTkInputDialog(
-            text="Enter a Keyword to search for:",
-            title="Post Search",
-        )
-        keyword = dialog.get_input()  # waits for input
-        posts = Network().post_search(self.graph, keyword)
-        message = ""
-        if not posts:
-            message += f"There is no post whose topic is '{keyword}' or contain the keyword '{keyword}'."
-        else:
-            message += f"Posts whose topic is '{keyword}' or contain the word '{keyword}' in it:\n"
-            for user_id, user_name, post_body in posts:
-                message += f"User ID: {user_id}, Name: {user_name}, Post: {post_body}\n"
-        CTkMessagebox(title="Post Search", message=message, icon="info")
+        try:
+            dialog = CTkInputDialog(
+                text="Enter a Keyword to search for:",
+                title="Post Search",
+            )
+            keyword = dialog.get_input()  # waits for input
+
+            if not keyword:
+                raise ValueError("No Keyword provided for Search")
+
+            posts = Network().post_search(self.graph, keyword)
+            message = ""
+            if not posts:
+                message += f"There is no post whose topic is '{keyword}' or contains the keyword '{keyword}'."
+            else:
+                message += f"Posts whose topic is '{keyword}' or contains the word '{keyword}' in it:\n"
+                for user_id, user_name, post_body in posts:
+                    message += (
+                        f"User ID: {user_id}, Name: {user_name}, Post: {post_body}\n"
+                    )
+            CTkMessagebox(title="Post Search", message=message, icon="info")
+        except Exception as e:
+            CTkMessagebox(title="Post Search Error", message=str(e), icon="cancel")
 
     def run(self):
         self.app.mainloop()
