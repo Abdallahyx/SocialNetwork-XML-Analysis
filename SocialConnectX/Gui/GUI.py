@@ -2,10 +2,10 @@ from customtkinter import *
 from CTkMessagebox import CTkMessagebox
 import customtkinter
 
-from Tree.Tree import Tree
-from Network.Network import Network
-from Compressor.compressor import XIPCompressor
-from Graph.Graph import DirectedGraph
+from SocialConnectX.Tree.Tree import Tree
+from SocialConnectX.Network.Network import Network
+from SocialConnectX.Compressor.compressor import XIPCompressor
+from SocialConnectX.Graph.Graph import DirectedGraph
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
@@ -76,6 +76,7 @@ class SocialConnectXApp:
             border_color="black",
             font=("Segoe UI", 14, "bold"),
             activate_scrollbars=False,
+            # wrap="none",
         )
         self.Scrollbar = CTkScrollbar(master=self.frameMiddle, command=self.scroll_function,height=500,)
         self.CodeTextBox.configure(yscrollcommand=self.on_textscroll)

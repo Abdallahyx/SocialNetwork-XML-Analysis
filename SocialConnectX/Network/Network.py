@@ -1,4 +1,4 @@
-from Graph.Graph import DirectedGraph
+from SocialConnectX.Graph.Graph import DirectedGraph
 import networkx as nx
 import matplotlib.pyplot as plt
 

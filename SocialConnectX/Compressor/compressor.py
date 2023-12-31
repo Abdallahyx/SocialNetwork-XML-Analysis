@@ -1,6 +1,6 @@
 import random
 
-from Bytedict.bytedict import ByteDict
+from SocialConnectX.Bytedict.bytedict import ByteDict
 
 """    
  This file contains the implementation of the XIPCompressor class, which is used to compress and decompress XML files.
