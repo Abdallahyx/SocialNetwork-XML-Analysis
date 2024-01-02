@@ -78,7 +78,11 @@ class SocialConnectXApp:
             activate_scrollbars=False,
             # wrap="none",
         )
-        self.Scrollbar = CTkScrollbar(master=self.frameMiddle, command=self.scroll_function,height=500,)
+        self.Scrollbar = CTkScrollbar(
+            master=self.frameMiddle,
+            command=self.scroll_function,
+            height=500,
+        )
         self.CodeTextBox.configure(yscrollcommand=self.on_textscroll)
         self.CodeTextBox.grid(
             row=1, column=1, sticky="nsew", padx=0, pady=8
@@ -111,7 +115,7 @@ class SocialConnectXApp:
         # To DO tomorrow
         self.CodeTextBox.bind("<KeyRelease>", lambda event: self.update_line_numbers())
 
-        self.Scrollbar.grid(row=1, column=2, sticky="nsew",pady=5)
+        self.Scrollbar.grid(row=1, column=2, sticky="nsew", pady=5)
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -125,10 +129,11 @@ class SocialConnectXApp:
         self.line_numbers1.yview(*args)
 
     def on_textscroll(self, *args):
-        '''Moves the scrollbar and scrolls text widgets when the mousewheel
-        is moved on a text widget'''
+        """Moves the scrollbar and scrolls text widgets when the mousewheel
+        is moved on a text widget"""
         self.Scrollbar.set(*args)
         self.scroll_function(customtkinter.MOVETO, args[0])
+
     def create_top_buttons(self):
         SaveButton = CTkButton(
             master=self.frameTop,
@@ -372,7 +377,13 @@ class SocialConnectXApp:
                 raise ValueError("XML parsing resulted in an empty tree")
             self.graph = Network().create_graph(self.tree)
         except Exception as e:
-            CTkMessagebox(title="Parsing Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Parsing Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def Check_Fix(self):
         try:
@@ -386,16 +397,30 @@ class SocialConnectXApp:
                 message = "XML is Consistent"
 
             CTkMessagebox(
-                title="XML Parser", message="XML is parsed successfully", icon="info"
+                title="XML Parser",
+                message="XML is parsed successfully",
+                icon="info",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
             )
 
             self.update_Output()
             self.tree = self.tree.ParseString(self.out)
-            CTkMessagebox(title="XML Consistency", message=message, icon="info")
+            CTkMessagebox(
+                title="XML Consistency",
+                message=message,
+                icon="info",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
             self.extension = ".xml"
         except Exception as e:
             CTkMessagebox(
-                title="Consistency Check Error", message=str(e), icon="cancel"
+                title="Consistency Check Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
             )
 
     def XML2JSON(self):
@@ -410,7 +435,11 @@ class SocialConnectXApp:
             self.extension = ".json"
         except Exception as e:
             CTkMessagebox(
-                title="XML to JSON Conversion Error", message=str(e), icon="cancel"
+                title="XML to JSON Conversion Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
             )
 
     def Prettify(self):
@@ -424,7 +453,13 @@ class SocialConnectXApp:
             self.update_Output()
             self.extension = ".xml"
         except Exception as e:
-            CTkMessagebox(title="Prettification Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Prettification Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def Minify(self):
         try:
@@ -437,7 +472,13 @@ class SocialConnectXApp:
             self.update_Output()
             self.extension = ".xml"
         except Exception as e:
-            CTkMessagebox(title="Minification Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Minification Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def ShowGraph(self):
         try:
@@ -449,7 +490,13 @@ class SocialConnectXApp:
             self.graph = Network().create_graph(self.tree)
             Network().show_graph(self.graph)
         except Exception as e:
-            CTkMessagebox(title="Graph Display Error", message=str(e), icon="cancel",width=500,font=("Segoe UI", 14, "bold"))
+            CTkMessagebox(
+                title="Graph Display Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def Compress(self):
         try:
@@ -462,8 +509,21 @@ class SocialConnectXApp:
                 return
             f.write(compressed_data)
             f.close()
+            CTkMessagebox(
+                title="Compression",
+                message=f"File is compressed successfully and saved to {f.name}",
+                icon="info",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
         except Exception as e:
-            CTkMessagebox(title="Compression Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Compression Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def Decompress(self):
         try:
@@ -474,24 +534,37 @@ class SocialConnectXApp:
 
             with open(filename, "rb") as file:
                 compressed_data = file.read()
-            decompressed_data = XIPCompressor().decompress_binary(compressed_data)
-            with open(
-                file=filename.replace(".xip", "_decompressed.xml"), mode="wb"
-            ) as decompressed_file:
-                decompressed_file.write(decompressed_data)
+            self.out = XIPCompressor().decompress_binary(compressed_data)
+            self.update_Output()
+            filename = filename.replace(".xip", "_decompressed.xml")
+            with open(file=filename, mode="wb") as decompressed_file:
+                decompressed_file.write(self.out)
+            CTkMessagebox(
+                title="Decompression",
+                message=f"File is decompressed successfully and saved to {filename}",
+                icon="info",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
         except Exception as e:
-            CTkMessagebox(title="Decompression Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Decompression Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def NetworkAnalysis(self):
         try:
             dialog = CTkInputDialog(
                 text="Enter first follower ID",
-                title="Mutual Followers between 2 Followers",
+                title="Mutual Followers between 2 Users",
             )
             follower_id1 = dialog.get_input()  # waits for input
             dialog = CTkInputDialog(
                 text="Enter second follower ID",
-                title="Mutual Followers between 2 Followers",
+                title="Mutual Followers between 2 Users",
             )
             follower_id2 = dialog.get_input()  # waits for input
 
@@ -510,9 +583,21 @@ class SocialConnectXApp:
             suggested_followers = Network().suggest_followers(self.graph)
             for user, user_suggestions in suggested_followers:
                 message += f"Suggested followers for User {user}: {user_suggestions}\n"
-            CTkMessagebox(title="Network Analysis", message=message, icon="info")
+            CTkMessagebox(
+                title="Network Analysis",
+                message=message,
+                icon="info",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
         except Exception as e:
-            CTkMessagebox(title="Network Analysis Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Network Analysis Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def PostSearch(self):
         try:
@@ -535,12 +620,16 @@ class SocialConnectXApp:
                     message += f"{user_id:<25}{user_name:<{100-len(user_name)}}{post_body[:50]:<50}\n"
                 ToplevelWindow(message=message)
         except Exception as e:
-            CTkMessagebox(title="Post Search Error", message=str(e), icon="cancel")
+            CTkMessagebox(
+                title="Post Search Error",
+                message=str(e),
+                icon="cancel",
+                width=500,
+                font=("Segoe UI", 14, "bold"),
+            )
 
     def run(self):
         self.app.mainloop()
-
-
 
     def add_state(self):
         # Add the current state to state_snapshots
@@ -628,8 +717,10 @@ class SocialConnectXApp:
 
 
 class ToplevelWindow(customtkinter.CTkToplevel):
-    def __init__(self,message, *args, **kwargs):
+    def __init__(self, message, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.label = customtkinter.CTkLabel(self, text=message, font=("Segoe UI", 14, "bold"),justify = LEFT)
+        self.label = customtkinter.CTkLabel(
+            self, text=message, font=("Segoe UI", 14, "bold"), justify=LEFT
+        )
         self.label.pack(padx=20, pady=20)
