@@ -396,7 +396,6 @@ class Tree:
                 if tree.m_root is None:
                     current_node = Node("".join(tag[0:]))
                     tree.set_root(current_node)
-                    insideparent = True
                 else:
                     if ("".join(tag[0:])) != "":
                         tree.add_node(Node("".join(tag[0:])))
@@ -420,11 +419,3 @@ class Tree:
         )  # making sure the root node has a value
 
         return tree.m_root
-
-    def ParseintoTree(self, filepath):
-        with open(filepath, "r") as file:
-            xml = file.read()
-        xml = self.remove_spaces_and_enters(xml)
-        tree = Tree()
-        tree.set_root(self.TreeParsing(xml))
-        return tree
