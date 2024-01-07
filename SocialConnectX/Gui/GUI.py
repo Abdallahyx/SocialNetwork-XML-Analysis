@@ -89,7 +89,7 @@ class SocialConnectXApp:
         )  # CodeTextBox is a class variable
         self.outputTextBox = CTkTextbox(
             master=self.frameMiddle,
-            width=500,
+            width=525,
             height=500,
             border_width=2,
             border_color="black",
@@ -126,7 +126,8 @@ class SocialConnectXApp:
 
     def scroll_function(self, *args):
         self.CodeTextBox.yview(*args)
-        self.line_numbers1.yview(*args)
+        if hasattr(self, "line_numbers1"):
+            self.line_numbers1.yview(*args)
 
     def on_textscroll(self, *args):
         """Moves the scrollbar and scrolls text widgets when the mousewheel
@@ -195,6 +196,18 @@ class SocialConnectXApp:
             fg_color="#999999",
             text_color="black",
         )
+        InfoButton = CTkButton(
+            master=self.frameTop,
+            text="Info",
+            width=70,
+            height=40,
+            border_width=2,
+            border_color="black",
+            font=("Segoe UI", 18, "bold"),
+            command=self.info,
+            fg_color="#999999",
+            text_color="black",
+        )
         ProgramName = CTkLabel(
             master=self.frameTop,
             text="SocialConnectX",
@@ -207,6 +220,7 @@ class SocialConnectXApp:
         ImportButton.pack(side="left", padx=10, pady=15)
         ExportButton.pack(side="left", padx=10, pady=15)
         UndoButton.pack(side="right", padx=10, pady=15)
+        InfoButton.pack(side="left", padx=10, pady=15)
         RedoButton.pack(side="right", padx=10, pady=15)
         SaveButton.pack(side="right", padx=10, pady=15)
         ProgramName.pack(side="right", anchor="center", padx=190, pady=15)
@@ -404,7 +418,6 @@ class SocialConnectXApp:
                 font=("Segoe UI", 14, "bold"),
             )
 
-            self.update_Output()
             self.tree = self.tree.ParseString(self.out)
             CTkMessagebox(
                 title="XML Consistency",
@@ -414,6 +427,8 @@ class SocialConnectXApp:
                 font=("Segoe UI", 14, "bold"),
             )
             self.extension = ".xml"
+            self.out = self.tree.PrettifyFormat()
+            self.update_Output()
         except Exception as e:
             CTkMessagebox(
                 title="Consistency Check Error",
@@ -569,20 +584,51 @@ class SocialConnectXApp:
             follower_id2 = dialog.get_input()  # waits for input
 
             if not follower_id1 and not follower_id2:
-                raise ValueError("No IDs provided for Analysis")
+                CTkMessagebox(
+                    title="Network Analysis Error",
+                    message="No IDs provided for Analysis",
+                    icon="cancel",
+                    width=500,
+                    font=("Segoe UI", 14, "bold"),
+                )
 
             message = ""
+
             most_influential_users = Network().most_influential(self.graph)
-            message += f"The most influential users are: {most_influential_users}\n"
+
+            message += f"The most influential users are: "
+
+            for id in most_influential_users:
+                message += f"User {id} "
+            message += "\n"
+
             most_active_users = Network().most_active(self.graph)
-            message += f"The most active users are: {most_active_users}\n"
+
+            message += f"The most active users are: "
+
+            for id in most_active_users:
+                message += f"User {id} "
+            message += "\n"
+
             mutualfollowers = Network().mutual_followers(
                 self.graph, follower_id1, follower_id2
             )
-            message += f"Mutual followers between Users {follower_id1} and {follower_id2}: {mutualfollowers}\n"
+            if follower_id1 and follower_id2:
+                mutualfollowers = Network().mutual_followers(
+                    self.graph, follower_id1, follower_id2
+                )
+                message += f"Mutual followers between Users {follower_id1} and {follower_id2}: "
+                for id in mutualfollowers:
+                    message += f"User {id} "
+                message += "\n"
+
             suggested_followers = Network().suggest_followers(self.graph)
             for user, user_suggestions in suggested_followers:
-                message += f"Suggested followers for User {user}: {user_suggestions}\n"
+                message += f"Suggested followers for User {user}: "
+                for id in user_suggestions:
+                    message += f"User {id} "
+                message += "\n"
+
             CTkMessagebox(
                 title="Network Analysis",
                 message=message,
@@ -618,7 +664,7 @@ class SocialConnectXApp:
                 message += f"{'User ID':<25}{'Name':<100}{'Post':<50}\n"
                 for user_id, user_name, post_body in posts:
                     message += f"{user_id:<25}{user_name:<{100-len(user_name)}}{post_body[:50]:<50}\n"
-                ToplevelWindow(message=message)
+            ToplevelWindow(message=message, title="Post Search")
         except Exception as e:
             CTkMessagebox(
                 title="Post Search Error",
@@ -630,6 +676,56 @@ class SocialConnectXApp:
 
     def run(self):
         self.app.mainloop()
+
+    def info(self):
+        info_message = """
+                                \t\t\t\t   Welcome to SocialConnectX - Your All-in-One Social Data Toolkit
+
+                        \t\t   Hello and thank you for choosing SocialConnectX,your go-to solution for handling and analyzing social data effortlessly.
+                        \t\t Whether you're a developer, data analyst,or just someone looking to explore and understand XML and network-related data,
+                        \t\t\t\t                 this application is designed to simplify your experience.
+
+Key Features:
+
+    XML Parsing and Manipulation:
+
+    Easily parse and manipulate XML data with our intuitive interface.
+    Check and fix XML consistency to ensure error-free processing.
+    
+    Data Transformation:
+
+    Convert XML to JSON effortlessly with a single click.
+    Prettify or minify XML content for better readability or compactness.
+    Network Analysis:
+
+    Visualize social connections using powerful graph representations.
+    Conduct network analysis, identify influential users, and explore mutual followers.
+    
+    Text Compression and Decompression:
+
+    Compress XML files for efficient storage and transmission.
+    Decompress files to their original format when needed.
+    Post Search:
+
+    Search for posts based on keywords within your network data.
+    Retrieve detailed information about users, including their posts.
+    
+    Easy Undo and Redo:
+
+    Take advantage of our undo and redo functionalities for hassle-free editing.
+    
+    How to Get Started:
+
+    Load your XML file using the 'Import' button.
+    Edit and manipulate the XML content in the 'Xml Code' textbox.
+    Explore various functionalities like parsing, transformation, and network analysis.
+    Save your results with the 'Save' button or export them with the 'Export' button.
+    For any questions or assistance, feel free to explore the 'Info' section or reach out to our support team.
+    SocialConnectX is here to simplify your social data journey.
+                        
+                        \t\t\t\t\t\t\t   Happy exploring!
+"""
+        ToplevelWindow(message=info_message, title="Info")
 
     def add_state(self):
         # Add the current state to state_snapshots
@@ -717,10 +813,27 @@ class SocialConnectXApp:
 
 
 class ToplevelWindow(customtkinter.CTkToplevel):
-    def __init__(self, message, *args, **kwargs):
+    def __init__(self, message, title, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.label = customtkinter.CTkLabel(
-            self, text=message, font=("Segoe UI", 14, "bold"), justify=LEFT
+        self.frame = customtkinter.CTkFrame(self)
+        self.Textbox = customtkinter.CTkTextbox(
+            self.frame, font=("Segoe UI", 14, "bold")
         )
-        self.label.pack(padx=20, pady=20)
+        self.Textbox.insert("end", message)
+        self.frame.pack(expand=True, fill="both")
+        self.Textbox.pack(expand=True, fill="both")
+        self.minsize(1050, 500)
+        self.title(title)
+        self.scrollbar = customtkinter.CTkScrollbar(
+            self.Textbox, command=self.Textbox.yview
+        )
+        self.okbutton = customtkinter.CTkButton(
+            self.frame, text="OK", command=self.destroy
+        )
+        self.okbutton.pack(pady=10, anchor="center")
+        # Raise the info window to the top
+        # Set the window on top
+        self.grab_set()
+
+    def top(self):
+        self.lift()

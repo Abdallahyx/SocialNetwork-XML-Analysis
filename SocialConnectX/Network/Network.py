@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 
 class Network:
-
     # 1. Most Influential Users (Most Followers)
     def most_influential(self, graph):
         user_ids = []
@@ -49,7 +48,7 @@ class Network:
         node2 = graph.find_node(str(node2_id))
 
         if not node1 or not node2:
-            print("Invalid nodes. Please provide existing nodes.")
+            # print("Invalid nodes. Please provide existing nodes.")
             return None
 
         followers_node1 = [

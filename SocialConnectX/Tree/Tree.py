@@ -233,7 +233,7 @@ class Tree:
                         XML_String[ps + 1 : st].rstrip().lstrip() != ""
                         and XML_String[st + 1] != "/"
                     ):
-                        errors.append(("Unclosed Tag", child, st, st + len(child)))
+                        errors.append(("Unclosed Tag", child))
                         XML_String = (
                             XML_String[:st] + "</" + child + ">" + XML_String[st:]
                         )
@@ -251,20 +251,10 @@ class Tree:
                                 XML_String[st + 2 : XML_String.find(">", st)],
                             )
                         )
-                        if len(XML_String[st + 2 : XML_String.find(">", st)]) < len(
-                            child
-                        ):
-                            diff = len(child) - len(
-                                XML_String[st + 2 : XML_String.find(">", st)]
-                            )
-                        else:
-                            diff = len(
-                                XML_String[st + 2 : XML_String.find(">", st)]
-                            ) - len(child)
+                        closing_tag = XML_String[st + 2 : XML_String.find(">", st)]
+                        diff = len(child) - len(closing_tag)
                         XML_String = (
-                            XML_String[:last_st]
-                            + XML_String[st + 2 : XML_String.find(">", st)]
-                            + XML_String[ps:]
+                            XML_String[:last_st] + closing_tag + XML_String[ps:]
                         )
                         st -= diff
 
@@ -336,7 +326,7 @@ class Tree:
 
     ### Another Function for the parsing
 
-    def TreeParsing(self, xml, Nod=None, start=0): #O(N) time and space complexity
+    def TreeParsing(self, xml, Nod=None, start=0):  # O(N) time and space complexity
         open_tag = False
         tag = []
         tree = Tree()
