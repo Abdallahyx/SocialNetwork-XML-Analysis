@@ -2,6 +2,9 @@
 
 A GUI-based program for parsing and visualizing an XML file representing a social network of users. The project includes various operations such as parsing, error checking and fixing, conversion to JSON, minifying, compression, decompression, prettifying, graph visualization, graph analysis, post search, and undo/redo functionality.
 
+
+![App_Photo](./Photoes/Screenshot%20(492).png)
+
 ## Table of Contents
 
 - [Social Network XML Parser and Visualizer](#social-network-xml-parser-and-visualizer)
