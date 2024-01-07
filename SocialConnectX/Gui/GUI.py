@@ -8,14 +8,14 @@ from SocialConnectX.Compressor.compressor import XIPCompressor
 from SocialConnectX.Graph.Graph import DirectedGraph
 
 customtkinter.set_appearance_mode("dark")
-customtkinter.set_default_color_theme("blue")
+customtkinter.set_default_color_theme("dark-blue")
 
 
 class SocialConnectXApp:
     def __init__(self):
         self.app = CTk()
-        self.app.minsize(1160, 800)
-        self.app.maxsize(1160, 800)
+        self.app.minsize(1156, 800)
+        self.app.maxsize(1156, 800)
         self.app.title("SocialConnectX")
         self.tree = Tree()
         self.xml = ""
@@ -78,11 +78,7 @@ class SocialConnectXApp:
             activate_scrollbars=False,
             # wrap="none",
         )
-        self.Scrollbar = CTkScrollbar(
-            master=self.frameMiddle,
-            command=self.scroll_function,
-            height=500,
-        )
+        self.Scrollbar = CTkScrollbar(master=self.frameMiddle, command=self.scroll_function,height=500,)
         self.CodeTextBox.configure(yscrollcommand=self.on_textscroll)
         self.CodeTextBox.grid(
             row=1, column=1, sticky="nsew", padx=0, pady=8
@@ -115,7 +111,7 @@ class SocialConnectXApp:
         # To DO tomorrow
         self.CodeTextBox.bind("<KeyRelease>", lambda event: self.update_line_numbers())
 
-        self.Scrollbar.grid(row=1, column=2, sticky="nsew", pady=5)
+        self.Scrollbar.grid(row=1, column=2, sticky="nsew",pady=5)
         # Initialize history list to store XML content after each edit
         self.history = []
         self.state_snapshots = []
@@ -129,11 +125,10 @@ class SocialConnectXApp:
         self.line_numbers1.yview(*args)
 
     def on_textscroll(self, *args):
-        """Moves the scrollbar and scrolls text widgets when the mousewheel
-        is moved on a text widget"""
+        '''Moves the scrollbar and scrolls text widgets when the mousewheel
+        is moved on a text widget'''
         self.Scrollbar.set(*args)
         self.scroll_function(customtkinter.MOVETO, args[0])
-
     def create_top_buttons(self):
         SaveButton = CTkButton(
             master=self.frameTop,
@@ -195,17 +190,30 @@ class SocialConnectXApp:
             fg_color="#999999",
             text_color="black",
         )
+        InfoButton = CTkButton(
+            master=self.frameTop,
+            text="Info",
+            width=70,
+            height=40,
+            border_width=2,
+            border_color="black",
+            font=("Segoe UI", 18, "bold"),
+            command=self.info,
+            fg_color="#999999",
+            text_color="black",
+        )
         ProgramName = CTkLabel(
             master=self.frameTop,
             text="SocialConnectX",
             width=70,
             height=40,
-            font=("Segoe UI", 22, "bold"),
+            font=("Segoe UI", 28, "bold","italic"),
             text_color="white",
         )
 
         ImportButton.pack(side="left", padx=10, pady=15)
         ExportButton.pack(side="left", padx=10, pady=15)
+        InfoButton.pack(side="left", padx=10, pady=15)
         UndoButton.pack(side="right", padx=10, pady=15)
         RedoButton.pack(side="right", padx=10, pady=15)
         SaveButton.pack(side="right", padx=10, pady=15)
@@ -214,10 +222,10 @@ class SocialConnectXApp:
     def create_bottom_buttons(self):
         OptionName = CTkLabel(
             master=self.frameBottom,
-            text="Options",
+            text="(Options)",
             width=70,
             height=1,
-            font=("Segoe UI", 22, "bold"),
+            font=("Segoe UI", 22, "bold","italic"),
         )
         ParseButton = CTkButton(
             master=self.frameBottom,
@@ -226,7 +234,7 @@ class SocialConnectXApp:
             height=40,
             border_width=2,
             border_color="black",
-            font=("Segoe UI", 18, "bold"),
+            font=("Segoe UI", 20, "bold"),
             fg_color="#999999",
             command=self.parse,
             text_color="black",
@@ -416,11 +424,7 @@ class SocialConnectXApp:
             self.extension = ".xml"
         except Exception as e:
             CTkMessagebox(
-                title="Consistency Check Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
+                title="Consistency Check Error", message=str(e), icon="cancel"
             )
 
     def XML2JSON(self):
@@ -454,7 +458,7 @@ class SocialConnectXApp:
             self.extension = ".xml"
         except Exception as e:
             CTkMessagebox(
-                title="Prettification Error",
+                title="Consistency Check Error",
                 message=str(e),
                 icon="cancel",
                 width=500,
@@ -472,13 +476,7 @@ class SocialConnectXApp:
             self.update_Output()
             self.extension = ".xml"
         except Exception as e:
-            CTkMessagebox(
-                title="Minification Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Minification Error", message=str(e), icon="cancel")
 
     def ShowGraph(self):
         try:
@@ -490,13 +488,7 @@ class SocialConnectXApp:
             self.graph = Network().create_graph(self.tree)
             Network().show_graph(self.graph)
         except Exception as e:
-            CTkMessagebox(
-                title="Graph Display Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Graph Display Error", message=str(e), icon="cancel",width=500,font=("Segoe UI", 14, "bold"))
 
     def Compress(self):
         try:
@@ -509,21 +501,8 @@ class SocialConnectXApp:
                 return
             f.write(compressed_data)
             f.close()
-            CTkMessagebox(
-                title="Compression",
-                message=f"File is compressed successfully and saved to {f.name}",
-                icon="info",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
         except Exception as e:
-            CTkMessagebox(
-                title="Compression Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Compression Error", message=str(e), icon="cancel")
 
     def Decompress(self):
         try:
@@ -547,13 +526,7 @@ class SocialConnectXApp:
                 font=("Segoe UI", 14, "bold"),
             )
         except Exception as e:
-            CTkMessagebox(
-                title="Decompression Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Decompression Error", message=str(e), icon="cancel")
 
     def NetworkAnalysis(self):
         try:
@@ -583,21 +556,9 @@ class SocialConnectXApp:
             suggested_followers = Network().suggest_followers(self.graph)
             for user, user_suggestions in suggested_followers:
                 message += f"Suggested followers for User {user}: {user_suggestions}\n"
-            CTkMessagebox(
-                title="Network Analysis",
-                message=message,
-                icon="info",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Network Analysis", message=message, icon="info")
         except Exception as e:
-            CTkMessagebox(
-                title="Network Analysis Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Network Analysis Error", message=str(e), icon="cancel")
 
     def PostSearch(self):
         try:
@@ -618,18 +579,62 @@ class SocialConnectXApp:
                 message += f"{'User ID':<25}{'Name':<100}{'Post':<50}\n"
                 for user_id, user_name, post_body in posts:
                     message += f"{user_id:<25}{user_name:<{100-len(user_name)}}{post_body[:50]:<50}\n"
-                ToplevelWindow(message=message)
+                ToplevelWindow(message=message, justify="left")
         except Exception as e:
-            CTkMessagebox(
-                title="Post Search Error",
-                message=str(e),
-                icon="cancel",
-                width=500,
-                font=("Segoe UI", 14, "bold"),
-            )
+            CTkMessagebox(title="Post Search Error", message=str(e), icon="cancel")
 
     def run(self):
         self.app.mainloop()
+
+    def info(self):
+        info_message ='''
+                                \t\t\t\t   Welcome to SocialConnectX - Your All-in-One Social Data Toolkit
+
+                        \t\t   Hello and thank you for choosing SocialConnectX,your go-to solution for handling and analyzing social data effortlessly.
+                        \t\t Whether you're a developer, data analyst,or just someone looking to explore and understand XML and network-related data,
+                        \t\t\t\t                 this application is designed to simplify your experience.
+
+Key Features:
+
+    XML Parsing and Manipulation:
+
+    Easily parse and manipulate XML data with our intuitive interface.
+    Check and fix XML consistency to ensure error-free processing.
+    
+    Data Transformation:
+
+    Convert XML to JSON effortlessly with a single click.
+    Prettify or minify XML content for better readability or compactness.
+    Network Analysis:
+
+    Visualize social connections using powerful graph representations.
+    Conduct network analysis, identify influential users, and explore mutual followers.
+    
+    Text Compression and Decompression:
+
+    Compress XML files for efficient storage and transmission.
+    Decompress files to their original format when needed.
+    Post Search:
+
+    Search for posts based on keywords within your network data.
+    Retrieve detailed information about users, including their posts.
+    
+    Easy Undo and Redo:
+
+    Take advantage of our undo and redo functionalities for hassle-free editing.
+    
+    How to Get Started:
+
+    Load your XML file using the 'Import' button.
+    Edit and manipulate the XML content in the 'Xml Code' textbox.
+    Explore various functionalities like parsing, transformation, and network analysis.
+    Save your results with the 'Save' button or export them with the 'Export' button.
+    For any questions or assistance, feel free to explore the 'Info' section or reach out to our support team.
+    SocialConnectX is here to simplify your social data journey.
+                        
+                        \t\t\t\t\t\t\t   Happy exploring!
+'''
+        ToplevelWindow(message=info_message, justify="center")
 
     def add_state(self):
         # Add the current state to state_snapshots
@@ -717,10 +722,14 @@ class SocialConnectXApp:
 
 
 class ToplevelWindow(customtkinter.CTkToplevel):
-    def __init__(self, message, *args, **kwargs):
+    def __init__(self,message, justify, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.label = customtkinter.CTkLabel(
-            self, text=message, font=("Segoe UI", 14, "bold"), justify=LEFT
-        )
-        self.label.pack(padx=20, pady=20)
+        self.frame = customtkinter.CTkFrame(self)
+        self.Textbox = customtkinter.CTkTextbox(self.frame,font=("Segoe UI", 14, "bold"))
+        self.Textbox.insert("end", message)
+        self.frame.pack(expand=True,fill="both")
+        self.Textbox.pack(expand=True,fill="both")
+        self.minsize(1050, 500)
+        self.scrollbar = customtkinter.CTkScrollbar(self.Textbox, command=self.Textbox.yview)
+        self.okbutton = customtkinter.CTkButton(self.frame,text="OK",command=self.destroy)
+        self.okbutton.pack(pady=10 ,anchor="center")
