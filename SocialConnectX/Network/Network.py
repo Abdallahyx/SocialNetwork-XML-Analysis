@@ -1,12 +1,13 @@
 from SocialConnectX.Graph.Graph import DirectedGraph
 import networkx as nx
 import matplotlib.pyplot as plt
-
+import SocialConnectX.Tree.Tree as Tree
 
 class Network:
 
     # 1. Most Influential Users (Most Followers)
-    def most_influential(self, graph):
+    @staticmethod
+    def most_influential(graph):
         user_ids = []
         out_degrees = []
 
@@ -25,7 +26,8 @@ class Network:
         return most_influential_users
 
     # 2. Most Active User (Connected to Lots of Users)
-    def most_active(self, graph):
+    @staticmethod
+    def most_active(graph):
         user_ids = []
         total_edges = []
 
@@ -44,7 +46,8 @@ class Network:
         return most_active_users
 
     # 3.  Mutual followers between 2 users
-    def mutual_followers(self, graph, node1_id, node2_id):
+    @staticmethod
+    def mutual_followers(graph, node1_id, node2_id):
         node1 = graph.find_node(str(node1_id))
         node2 = graph.find_node(str(node2_id))
 
@@ -65,7 +68,8 @@ class Network:
         return mut_followers
 
     # 4.  Suggest users to follow
-    def suggest_followers(self, graph):
+    @staticmethod
+    def suggest_followers(graph):
         suggested_followers = []
 
         for user in graph.nodes:
@@ -84,7 +88,8 @@ class Network:
 
         return suggested_followers
 
-    def create_graph(self, tree):
+    @staticmethod
+    def create_graph(tree: Tree.Tree):
         """
         Create a directed graph from an XML tree.
 
@@ -130,7 +135,8 @@ class Network:
         else:
             return None
 
-    def show_graph(self, graph):
+    @staticmethod
+    def show_graph(graph):
         """
         Visualize the graph using NetworkX and Matplotlib.
 
@@ -161,7 +167,8 @@ class Network:
         )
         plt.show()
 
-    def post_search(self, graph, keyword):
+    @staticmethod
+    def post_search(graph, keyword):
         """
         Search for posts containing a specific keyword.
 
@@ -175,7 +182,6 @@ class Network:
         matching_posts = []
 
         for user in graph.nodes:
-            user_name = user.name
             user_posts = user.posts
 
             for post in user_posts:
