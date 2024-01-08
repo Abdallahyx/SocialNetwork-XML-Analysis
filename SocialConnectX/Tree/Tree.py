@@ -218,7 +218,7 @@ class Tree:
             raise ValueError("Invalid XML format")
 
         parent = root_tag
-        stk.append(parent)
+        stk.append([parent, match.end()])
         st = XML_String.find("<", match.end())
         ps = XML_String.find(">", st)
 
@@ -226,6 +226,7 @@ class Tree:
             if XML_String[st + 1] != "/":
                 child = XML_String[st + 1 : ps]
                 last_st = st + 1
+                last_ps = ps + 1
                 st = XML_String.find("<", ps)
 
                 if st != -1:
@@ -233,7 +234,7 @@ class Tree:
                         XML_String[ps + 1 : st].rstrip().lstrip() != ""
                         and XML_String[st + 1] != "/"
                     ):
-                        errors.append(("Unclosed Tag", child))
+                        errors.append(["Unclosed leaf Tag", child])
                         XML_String = (
                             XML_String[:st] + "</" + child + ">" + XML_String[st:]
                         )
@@ -241,22 +242,60 @@ class Tree:
 
                     if XML_String[st + 1] != "/":
                         parent = child
-                        stk.append(parent)
+                        stk.append([parent, last_ps])
 
                     elif child != XML_String[st + 2 : XML_String.find(">", st)]:
-                        errors.append(
-                            (
-                                "Mismatched Tag",
-                                child,
-                                XML_String[st + 2 : XML_String.find(">", st)],
+                        next_opening = XML_String.find(f"<{child}>", st)
+                        next_closing = XML_String.find(f"</{child}>", st)
+                        if next_closing != -1:
+                            if (
+                                (next_closing < next_opening)
+                                or next_opening == -1
+                                or (
+                                    (next_closing > next_opening) and next_opening != -1
+                                )
+                            ):
+                                stk.append([child, XML_String.find(">", st)])
+                                errors.append(
+                                    [
+                                        "Missing Opening Leaf Tag",
+                                        XML_String[st + 2 : XML_String.find(">", st)],
+                                    ]
+                                )
+
+                                diff = (
+                                    len(XML_String[st + 2 : XML_String.find(">", st)])
+                                    + 2
+                                )
+
+                                XML_String = (
+                                    XML_String[: ps + 1]
+                                    + f"<{XML_String[st + 2 : XML_String.find('>', st)]}>"
+                                    + XML_String[ps + 1 :]
+                                )
+
+                                st = ps + 1
+                                ps += diff
+
+                        else:
+                            errors.append(
+                                [
+                                    "Mismatched Leaf Tag",
+                                    child,
+                                    XML_String[st + 2 : XML_String.find(">", st)],
+                                ]
                             )
-                        )
-                        closing_tag = XML_String[st + 2 : XML_String.find(">", st)]
-                        diff = len(child) - len(closing_tag)
-                        XML_String = (
-                            XML_String[:last_st] + closing_tag + XML_String[ps:]
-                        )
-                        st -= diff
+
+                            diff = len(child) - len(
+                                XML_String[st + 2 : XML_String.find(">", st)]
+                            )
+
+                            XML_String = (
+                                XML_String[:last_st]
+                                + XML_String[st + 2 : XML_String.find(">", st)]
+                                + XML_String[ps:]
+                            )
+                            st -= diff
 
                 ps = XML_String.find(">", st)
 
@@ -267,19 +306,42 @@ class Tree:
                 if st != -1:
                     if XML_String[st + 1] == "/":
                         while stk:
-                            if stk[-1] == XML_String[st + 2 : ps]:
+                            if stk[-1][0] == XML_String[st + 2 : ps]:
                                 stk.pop()
                                 break
                             else:
-                                errors.append(("Unclosed Tag", stk[-1]))
-                                XML_String = (
-                                    XML_String[:st]
-                                    + "</"
-                                    + stk.pop()
-                                    + ">"
-                                    + XML_String[st:]
-                                )
-                                break
+                                closing_tag, end = stk[-1]
+                                is_closed = XML_String.find(f"</{closing_tag}>", st)
+                                if is_closed != -1:
+                                    diff = len(XML_String[st + 2 : ps]) + 2
+                                    errors.append(
+                                        [
+                                            "Missing Opening Parent Tag",
+                                            XML_String[st + 2 : ps],
+                                        ]
+                                    )
+                                    XML_String = (
+                                        XML_String[:end]
+                                        + "<"
+                                        + XML_String[st + 2 : ps]
+                                        + ">"
+                                        + XML_String[end:]
+                                    )
+
+                                    st += diff
+                                    ps = st + diff
+                                    break
+
+                                else:
+                                    errors.append(["Unclosed Parent Tag", closing_tag])
+                                    XML_String = (
+                                        XML_String[:st]
+                                        + "</"
+                                        + stk.pop()[0]
+                                        + ">"
+                                        + XML_String[st:]
+                                    )
+                                    break
 
         return XML_String, errors
 
