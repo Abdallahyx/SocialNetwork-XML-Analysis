@@ -206,7 +206,7 @@ class Tree:
     def Consistency(self, XML_String):
         stk = []
         errors = []
-
+        XML_String = XML_String.lstrip()
         # Remove processing instruction if present
         XML_String = re.sub(r"<\?.*?\?>", "", XML_String)
 
